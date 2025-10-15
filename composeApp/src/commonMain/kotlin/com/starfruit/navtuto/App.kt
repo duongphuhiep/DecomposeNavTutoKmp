@@ -1,49 +1,40 @@
 package com.starfruit.navtuto
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeContentPadding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.painterResource
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.decompose.extensions.compose.stack.Children
+import com.arkivanov.decompose.extensions.compose.stack.animation.slide
+import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
-import navtuto.composeapp.generated.resources.Res
-import navtuto.composeapp.generated.resources.compose_multiplatform
-
 @Composable
-@Preview
-fun App() {
+fun App(component: RootComponent) {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        Column(
+        val childStack by component.childStack.subscribeAsState()
+        Children(
+            stack = childStack,
             modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
                 .safeContentPadding()
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            animation = stackAnimation(slide()),
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me!")
-            }
-            AnimatedVisibility(showContent) {
-                val greeting = remember { Greeting().greet() }
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(painterResource(Res.drawable.compose_multiplatform), null)
-                    Text("Compose: $greeting")
-                }
+            when (val instance = it.instance) {
+                is RootComponent.Child.ScreenA -> ScreenAView(instance.component)
+                is RootComponent.Child.ScreenB -> ScreenBView(instance.component)
             }
         }
     }
+}
+
+@Composable
+@Preview(showBackground = true, widthDp = 480, heightDp = 800)
+fun AppPreview() {
+    val component = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
+    App(component)
 }

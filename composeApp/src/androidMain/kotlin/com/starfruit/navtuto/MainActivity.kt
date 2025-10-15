@@ -6,14 +6,21 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.decompose.retainedComponent
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.value.Value
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
+        val rootComponent = retainedComponent {
+            DefaultRootComponent(it)
+        }
         setContent {
-            App()
+            App(rootComponent)
         }
     }
 }
@@ -21,5 +28,6 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun AppAndroidPreview() {
-    App()
+    val rootComponent = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
+    App(rootComponent)
 }
