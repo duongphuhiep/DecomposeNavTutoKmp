@@ -1,0 +1,5 @@
+package com.starfruit.navtuto
+
+import androidx.compose.ui.window.ComposeUIViewController
+
+fun MainViewController() = ComposeUIViewController { App() }
