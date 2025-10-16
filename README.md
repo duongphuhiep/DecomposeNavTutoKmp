@@ -1,3 +1,7 @@
+# Playground to learn [Decompose](https://arkivanov.github.io/Decompose) the framework
+
+[Why decompose?](./Navigation%20and%20MVVM%20framework%20comparison.md)
+
 This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
 
 * [/composeApp](./composeApp/src) is for code that will be shared across your Compose Multiplatform applications.
