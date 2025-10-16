@@ -20,9 +20,9 @@ class AppTest {
         assertIs<RootComponent.Child.ScreenA>(currentScreen)
 
         //type "1234" on ScreenA
-        currentScreen.component.UpdateText("1234")
+        currentScreen.component.updateText("1234")
 
-        currentScreen.component.GoToScreenB()
+        currentScreen.component.goToScreenB()
 
         //Now the current active screen is screenB
         currentScreen = rootComponent.childStack.active.instance
@@ -52,9 +52,9 @@ class AppTest {
         println("screenA=${screenA.component.lifecycle.state}")
 
         //type "1234" on ScreenA
-        screenA.component.UpdateText("1234")
+        screenA.component.updateText("1234")
         println("Go to ScreenB")
-        screenA.component.GoToScreenB()
+        screenA.component.goToScreenB()
 
         //Now the current active screen is screenB
         val screenB = rootComponent.childStack.active.instance
@@ -78,7 +78,7 @@ class AppTest {
 
         //go the screenB the second time
         println("Go to ScreenB the second time")
-        screenA.component.GoToScreenB()
+        screenA.component.goToScreenB()
 
         val screenB1 = rootComponent.childStack.active.instance
         assertIs<RootComponent.Child.ScreenB>(screenB1)

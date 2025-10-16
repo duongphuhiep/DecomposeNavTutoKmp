@@ -40,7 +40,7 @@ class DefaultRootComponent(componentContext: ComponentContext) : RootComponent, 
         return when (config) {
             is RootComponent.Configuration.ScreenA -> RootComponent.Child.ScreenA(DefaultScreenAComponent(
                 componentContext = context,
-                navigateToScreenB = { navigation.pushNew(RootComponent.Configuration.ScreenB(it)) })
+                onGoToScreenB = { navigation.pushNew(RootComponent.Configuration.ScreenB(it)) })
             )
             is RootComponent.Configuration.ScreenB -> RootComponent.Child.ScreenB(DefaultScreenBComponent(
                 componentContext = context,

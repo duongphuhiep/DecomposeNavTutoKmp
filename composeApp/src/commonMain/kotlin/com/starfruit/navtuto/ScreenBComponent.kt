@@ -24,12 +24,8 @@ fun ScreenBView(component: ScreenBComponent) {
 @Composable
 @Preview(showBackground = true, widthDp = 480, heightDp = 800)
 fun ScreenBPreview() {
-    val component = object : ScreenBComponent {
-        override val text = "preview content"
-        override fun GoBack() {}
-    }
     MaterialTheme {
-        ScreenBView(component)
+        ScreenBView(ScreenBComponentPreview)
     }
 }
 
@@ -46,4 +42,9 @@ class DefaultScreenBComponent(
     override fun GoBack() {
         navigateBack()
     }
+}
+
+val ScreenBComponentPreview = object : ScreenBComponent {
+    override val text = "preview content"
+    override fun GoBack() {}
 }

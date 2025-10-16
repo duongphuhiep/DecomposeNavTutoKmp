@@ -58,6 +58,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            implementation(libs.kermit)
+            implementation(libs.composeIcons.lineAwesome)
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
         }
