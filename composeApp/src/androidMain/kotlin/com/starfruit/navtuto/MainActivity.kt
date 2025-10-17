@@ -8,8 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.retainedComponent
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 
 class MainActivity : ComponentActivity() {
@@ -20,7 +18,7 @@ class MainActivity : ComponentActivity() {
             DefaultRootComponent(it)
         }
         setContent {
-            App(rootComponent)
+            RootView(rootComponent)
         }
     }
 }
@@ -29,5 +27,5 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppAndroidPreview() {
     val rootComponent = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
-    App(rootComponent)
+    RootView(rootComponent)
 }

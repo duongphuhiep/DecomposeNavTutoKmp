@@ -11,7 +11,7 @@ package com.starfruit.util
  * in the decompose library. `Value<Something?>` won't compiled, you will have to use `Value<Optional<Something>>`
  * as replacement.
  *
- * Warning: `Option<Foo>(null) == Option<Bar>(null)` they are `equals` although
+ * Warning: `Optional<Foo>(null) == Optional<Bar>(null)` they are `equals` although
  * the types are different, because they are holding a null value which is types-agnostic.
  */
 class Optional<out T : Any> private constructor(

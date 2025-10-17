@@ -10,6 +10,6 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 fun main() {
     ComposeViewport {
         val component = remember { DefaultRootComponent(DefaultComponentContext(LifecycleRegistry())) }
-        App(component)
+        RootView(component)
     }
 }

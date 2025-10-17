@@ -1,14 +1,11 @@
 package com.starfruit.navtuto
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.extensions.compose.stack.Children
@@ -16,7 +13,6 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 // Create a CompositionLocal
@@ -25,7 +21,7 @@ val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
 }
 
 @Composable
-fun App(component: RootComponent) {
+fun RootView(component: RootComponent) {
     MaterialTheme {
         val snackbarHostState = remember { SnackbarHostState() }
         CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState)
@@ -35,13 +31,13 @@ fun App(component: RootComponent) {
                     SnackbarHost(hostState = snackbarHostState)
                 }
             ) { contentPadding ->
-                Column(Modifier.padding(contentPadding)) {
+                Column(Modifier
+                    .padding(contentPadding)
+                    .fillMaxSize()) {
                     val childStack by component.childStack.subscribeAsState()
                     Children(
                         stack = childStack,
-                        modifier = Modifier
-                            .safeContentPadding()
-                            .fillMaxSize(),
+                        modifier = Modifier.safeContentPadding(),
                         animation = stackAnimation(slide()),
                     ) {
                         when (val instance = it.instance) {
@@ -55,9 +51,10 @@ fun App(component: RootComponent) {
     }
 }
 
+private val rootComponentPreview = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
+
 @Composable
 @Preview(showBackground = true, widthDp = 480, heightDp = 800)
-fun AppPreview() {
-    val component = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
-    App(component)
+fun RootPreview() {
+    RootView(rootComponentPreview)
 }

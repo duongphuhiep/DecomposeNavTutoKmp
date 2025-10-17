@@ -20,6 +20,7 @@ composeIcons = "1.1.1"
 decompose = "3.4.0"
 
 jetbrainsKotlinxSerialization = "1.9.0"
+uiDesktop = "1.7.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }

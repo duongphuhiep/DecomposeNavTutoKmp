@@ -1,4 +1,4 @@
-package com.starfruit.navtuto
+package com.starfruit.navtuto.notused
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
