@@ -20,7 +20,7 @@ fun ScreenBView(component: ScreenBComponent) {
 
 @Composable
 @Preview(showBackground = true, widthDp = 480, heightDp = 800)
-fun ScreenBPreview() {
+private fun ScreenBPreview() {
     MaterialTheme {
         ScreenBView(screenBComponentPreview)
     }

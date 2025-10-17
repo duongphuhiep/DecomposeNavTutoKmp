@@ -52,7 +52,7 @@ fun ScreenAView(component: ScreenAComponent) {
 
 @Composable
 @Preview(showBackground = true, widthDp = 480, heightDp = 800)
-fun ScreenAPreview() {
+private fun ScreenAPreview() {
     MaterialTheme {
         ScreenAView(screenAComponentPreview)
     }

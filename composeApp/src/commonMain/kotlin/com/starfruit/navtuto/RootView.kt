@@ -55,6 +55,6 @@ private val rootComponentPreview = DefaultRootComponent(DefaultComponentContext(
 
 @Composable
 @Preview(showBackground = true, widthDp = 480, heightDp = 800)
-fun RootPreview() {
+private fun RootPreview() {
     RootView(rootComponentPreview)
 }
