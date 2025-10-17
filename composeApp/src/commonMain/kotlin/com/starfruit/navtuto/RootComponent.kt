@@ -16,17 +16,19 @@ interface RootComponent {
         data class ScreenA(val component: ScreenAComponent) : Child()
         data class ScreenB(val component: ScreenBComponent) : Child()
         data class Pages(val component: PagesComponent) : Child()
+        data class Panels(val component: PanelsComponent) : Child()
     }
 
     @Serializable
     sealed class Configuration {
         @Serializable
         data object ScreenA : Configuration()
-
         @Serializable
         data class ScreenB(val text: String) : Configuration()
         @Serializable
         data object Pages : Configuration()
+        @Serializable
+        data object Panels : Configuration()
     }
 }
 
@@ -55,6 +57,9 @@ class DefaultRootComponent(componentContext: ComponentContext) : RootComponent,
                         },
                         onGoToPages = {
                             navigation.pushNew(RootComponent.Configuration.Pages)
+                        },
+                        onGoToPanels = {
+                            navigation.pushNew(RootComponent.Configuration.Panels)
                         }
                     )
                 )
@@ -71,6 +76,12 @@ class DefaultRootComponent(componentContext: ComponentContext) : RootComponent,
             is RootComponent.Configuration.Pages ->
                 RootComponent.Child.Pages(
                     DefaultPagesComponent(context)
+                )
+            is RootComponent.Configuration.Panels ->
+                RootComponent.Child.Panels(
+                    DefaultPanelsComponent(context, onGoBack = {
+                        navigation.pop()
+                    })
                 )
         }
     }

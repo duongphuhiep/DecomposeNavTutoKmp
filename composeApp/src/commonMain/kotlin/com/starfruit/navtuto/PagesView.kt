@@ -74,7 +74,7 @@ private fun PagesPreview() {
     }
 }
 
-private val pagesComponentPreview = object : PagesComponent {
+val pagesComponentPreview = object : PagesComponent {
     override val pages: Value<ChildPages<*, PageComponent>>
         get() = MutableValue(ChildPages<String, PageComponent>())
 

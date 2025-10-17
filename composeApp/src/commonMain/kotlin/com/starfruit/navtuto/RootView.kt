@@ -43,7 +43,8 @@ fun RootView(component: RootComponent) {
                         when (val instance = it.instance) {
                             is RootComponent.Child.ScreenA -> ScreenAView(instance.component)
                             is RootComponent.Child.ScreenB -> ScreenBView(instance.component)
-                            is RootComponent.Child.Pages -> PagesView((instance.component))
+                            is RootComponent.Child.Pages -> PagesView(instance.component)
+                            is RootComponent.Child.Panels -> PanelsView(instance.component)
                         }
                     }
                 }
@@ -52,7 +53,7 @@ fun RootView(component: RootComponent) {
     }
 }
 
-private val rootComponentPreview = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
+val rootComponentPreview = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
 
 @Composable
 @Preview(showBackground = true, widthDp = 480, heightDp = 800)

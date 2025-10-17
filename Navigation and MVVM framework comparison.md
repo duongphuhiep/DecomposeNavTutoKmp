@@ -23,9 +23,9 @@ Remark:
 * decompose and circuit stands out as both MVVM framework + navigation solution => let's focus on them first.
 
 ### decompose
-* It add a abstraction layer, even own a reactivity system 
-	* adding 👎 complexity + 👎 verbosity + 👎 steeper learning curve but 👍 offer clarity (no magic)
-	* 👍 Doesn't depend on anything (evens the Compose API) so the Decompose's API is stable, learn once works anywhere
+* It adds a abstraction layer, evens for the reactivity system 
+	* adding 👎 complexity + 👎 verbosity + 👎 steeper learning curve but 👍 less magic
+	* 👍 Doesn't depend on anything (evens the Compose API) so the Decompose's API is stable, learn once works everywhere
 	* 👍 the most suitable for cross-platform development (thanks to this abstraction layer)
 	* 👍 the best testability (thanks to this abstraction layer)
 * 👍 work the same for any kind of UI (compose, android, desktop, iOS, web)

@@ -1,4 +1,4 @@
-# Playground to learn [Decompose](https://arkivanov.github.io/Decompose) the framework
+# Playground to learn the [Decompose](https://arkivanov.github.io/Decompose) framework
 
 [Why decompose?](./Navigation%20and%20MVVM%20framework%20comparison.md)
 

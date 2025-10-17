@@ -58,16 +58,20 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            implementation(libs.material3.windowSizeClass)
+            implementation(libs.material3.adaptive)
             implementation(libs.kermit)
             implementation(libs.composeIcons.lineAwesome)
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
+            implementation(libs.decompose.compose.experimental)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
 
             implementation(libs.jetbrains.kotlinx.kotlinxSerializationCore)
             implementation(libs.jetbrains.kotlinx.kotlinxSerializationJson)
+            implementation(libs.jetbrains.kotlinx.coroutines.test)
         }
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)

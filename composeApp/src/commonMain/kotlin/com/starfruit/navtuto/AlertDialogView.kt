@@ -52,7 +52,7 @@ private fun AlertDialogPreview() {
     }
 }
 
-private val alertDialogComponentPreview = object: AlertDialogComponent {
+val alertDialogComponentPreview = object: AlertDialogComponent {
     override val text = "something to preview"
     override fun dismiss() {}
     override fun confirm() {}

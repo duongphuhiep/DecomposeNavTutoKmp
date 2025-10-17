@@ -23,12 +23,14 @@ interface ScreenAComponent {
     fun openAlertDialog()
     fun resetDialogResult()
     fun goToPages()
+    fun goToPanels()
 }
 
 class DefaultScreenAComponent(
     componentContext: ComponentContext,
     private val onGoToScreenB: (text: String) -> Unit,
-    private val onGoToPages: ()->Unit
+    private val onGoToPages: ()->Unit,
+    private val onGoToPanels: ()->Unit
 ) : ScreenAComponent, ComponentContext by componentContext {
     private val dialogNavigation = SlotNavigation<AlertDialogConfig>()
     val alertDialogChildSlot: Value<ChildSlot<*, AlertDialogComponent>> =
@@ -64,13 +66,14 @@ class DefaultScreenAComponent(
     override fun openAlertDialog() {
         dialogNavigation.activate(AlertDialogConfig(text.value))
     }
-
     override fun resetDialogResult() {
         _dialogIsConfirmed.value = Optional(null)
     }
-
     override fun goToPages() {
         onGoToPages()
+    }
+    override fun goToPanels() {
+        onGoToPanels()
     }
 
     fun dialogDismissed() {

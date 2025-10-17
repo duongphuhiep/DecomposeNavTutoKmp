@@ -26,7 +26,7 @@ private fun ScreenBPreview() {
     }
 }
 
-private val screenBComponentPreview = object : ScreenBComponent {
+val screenBComponentPreview = object : ScreenBComponent {
     override val text = "preview content"
     override fun GoBack() {}
 }
