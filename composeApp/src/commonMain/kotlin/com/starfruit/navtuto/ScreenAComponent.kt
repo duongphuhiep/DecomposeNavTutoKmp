@@ -22,11 +22,13 @@ interface ScreenAComponent {
     fun updateText(text: String)
     fun openAlertDialog()
     fun resetDialogResult()
+    fun goToPages()
 }
 
 class DefaultScreenAComponent(
     componentContext: ComponentContext,
     private val onGoToScreenB: (text: String) -> Unit,
+    private val onGoToPages: ()->Unit
 ) : ScreenAComponent, ComponentContext by componentContext {
     private val dialogNavigation = SlotNavigation<AlertDialogConfig>()
     val alertDialogChildSlot: Value<ChildSlot<*, AlertDialogComponent>> =
@@ -65,6 +67,10 @@ class DefaultScreenAComponent(
 
     override fun resetDialogResult() {
         _dialogIsConfirmed.value = Optional(null)
+    }
+
+    override fun goToPages() {
+        onGoToPages()
     }
 
     fun dialogDismissed() {

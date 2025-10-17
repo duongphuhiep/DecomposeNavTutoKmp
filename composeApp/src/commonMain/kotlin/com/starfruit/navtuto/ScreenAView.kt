@@ -27,9 +27,11 @@ fun ScreenAView(component: ScreenAComponent) {
         Button({ component.goToScreenB() }) {
             Text("Go to ScreenB")
         }
-        //component.dialog.value.child?.instance
         Button({ component.openAlertDialog() }) {
             Text("Open Alert Dialog")
+        }
+        Button({ component.goToPages() }) {
+            Text("Pages navigation")
         }
 
         val displayDialog by component.alertDialog.subscribeAsState()
@@ -60,7 +62,7 @@ private fun ScreenAPreview() {
 
 private val screenAComponentPreview = object : ScreenAComponent {
     override val alertDialog: Value<Optional<AlertDialogComponent>>
-        get() = TODO("Not yet implemented")
+        get() = MutableValue(Optional(null))
     override val text: Value<String> = MutableValue("This is screen A")
     override val dialogIsConfirmed: Value<Optional<Boolean>> = MutableValue(Optional(null))
 
@@ -68,4 +70,5 @@ private val screenAComponentPreview = object : ScreenAComponent {
     override fun updateText(text: String) {}
     override fun openAlertDialog() {}
     override fun resetDialogResult() {}
+    override fun goToPages() {}
 }

@@ -10,10 +10,10 @@ interface ScreenBComponent {
 class DefaultScreenBComponent(
     componentContext: ComponentContext,
     override val text: String,
-    private val navigateBack: () -> Unit
+    private val onGoBack: () -> Unit
 ) : ScreenBComponent, ComponentContext by componentContext {
     override fun GoBack() {
-        navigateBack()
+        onGoBack()
     }
 }
 

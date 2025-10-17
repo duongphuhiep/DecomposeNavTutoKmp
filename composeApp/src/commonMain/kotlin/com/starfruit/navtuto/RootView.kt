@@ -43,6 +43,7 @@ fun RootView(component: RootComponent) {
                         when (val instance = it.instance) {
                             is RootComponent.Child.ScreenA -> ScreenAView(instance.component)
                             is RootComponent.Child.ScreenB -> ScreenBView(instance.component)
+                            is RootComponent.Child.Pages -> PagesView((instance.component))
                         }
                     }
                 }
