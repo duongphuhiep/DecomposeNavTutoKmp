@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.Child
 import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
@@ -67,7 +68,7 @@ fun PagesView(component: PagesComponent) {
 }
 
 @Composable
-@Preview
+@Preview(showBackground = true)
 private fun PagesPreview() {
     MaterialTheme {
         PagesView(pagesComponentPreview)
@@ -76,7 +77,12 @@ private fun PagesPreview() {
 
 val pagesComponentPreview = object : PagesComponent {
     override val pages: Value<ChildPages<*, PageComponent>>
-        get() = MutableValue(ChildPages<String, PageComponent>())
-
+        get() = MutableValue(ChildPages(
+            items = listOf(
+                Child.Created(0, pageComponentPreview),
+                Child.Created(1, pageComponentPreview),
+            ),
+            selectedIndex = 1
+        ))
     override fun selectPage(index: Int) {}
 }
