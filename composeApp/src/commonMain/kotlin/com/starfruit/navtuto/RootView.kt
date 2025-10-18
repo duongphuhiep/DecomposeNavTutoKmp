@@ -45,6 +45,7 @@ fun RootView(component: RootComponent) {
                             is RootComponent.Child.ScreenB -> ScreenBView(instance.component)
                             is RootComponent.Child.Pages -> PagesView(instance.component)
                             is RootComponent.Child.Panels -> PanelsView(instance.component)
+                            is RootComponent.Child.List -> ListView(instance.component)
                         }
                     }
                 }

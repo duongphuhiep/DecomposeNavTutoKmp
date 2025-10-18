@@ -24,13 +24,15 @@ interface ScreenAComponent {
     fun resetDialogResult()
     fun goToPages()
     fun goToPanels()
+    fun goToList()
 }
 
 class DefaultScreenAComponent(
     componentContext: ComponentContext,
     private val onGoToScreenB: (text: String) -> Unit,
-    private val onGoToPages: ()->Unit,
-    private val onGoToPanels: ()->Unit
+    private val onGoToPages: () -> Unit,
+    private val onGoToPanels: () -> Unit,
+    private val onGoToList: () -> Unit
 ) : ScreenAComponent, ComponentContext by componentContext {
     private val dialogNavigation = SlotNavigation<AlertDialogConfig>()
     val alertDialogChildSlot: Value<ChildSlot<*, AlertDialogComponent>> =
@@ -74,6 +76,9 @@ class DefaultScreenAComponent(
     }
     override fun goToPanels() {
         onGoToPanels()
+    }
+    override fun goToList() {
+        onGoToList()
     }
 
     fun dialogDismissed() {

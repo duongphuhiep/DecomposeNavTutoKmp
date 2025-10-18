@@ -36,6 +36,9 @@ fun ScreenAView(component: ScreenAComponent) {
         Button({ component.goToPanels() }) {
             Text("Panels navigation")
         }
+        Button({ component.goToList() }) {
+            Text("List navigation")
+        }
 
         val displayDialog by component.alertDialog.subscribeAsState()
         displayDialog.value?.also {
@@ -75,4 +78,5 @@ val screenAComponentPreview = object : ScreenAComponent {
     override fun resetDialogResult() {}
     override fun goToPages() {}
     override fun goToPanels() {}
+    override fun goToList() {}
 }

@@ -8,6 +8,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
+import com.arkivanov.decompose.router.items.*
 
 class AppTest {
     val rootLifecycle = LifecycleRegistry()
@@ -88,6 +89,10 @@ class AppTest {
         // it is not the same screenB as the first one (the first one is destroyed)
         assertNotEquals(screenB.component, screenB1.component)
         println("screenA=${screenA.component.lifecycle.state}, screenB=${screenB.component.lifecycle.state}, screenB1=${screenB1.component.lifecycle.state}")
+    }
+
+    fun `lazy item`() {
+        val x: TestLazyChildItems
     }
 }
 
