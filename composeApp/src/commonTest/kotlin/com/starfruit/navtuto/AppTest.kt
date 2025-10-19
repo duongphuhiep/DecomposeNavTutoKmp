@@ -90,9 +90,5 @@ class AppTest {
         assertNotEquals(screenB.component, screenB1.component)
         println("screenA=${screenA.component.lifecycle.state}, screenB=${screenB.component.lifecycle.state}, screenB1=${screenB1.component.lifecycle.state}")
     }
-
-    fun `lazy item`() {
-        val x: TestLazyChildItems
-    }
 }
 
