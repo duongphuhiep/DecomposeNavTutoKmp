@@ -1,4 +1,4 @@
-package com.starfruit.util.compose
+package com.starfruit.util.decompose
 
 import com.arkivanov.decompose.Cancellation
 import com.arkivanov.decompose.ExperimentalDecomposeApi

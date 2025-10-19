@@ -1,5 +1,6 @@
 package com.starfruit.navtuto
 
+import androidx.compose.runtime.remember
 import androidx.compose.ui.window.*
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
@@ -27,12 +28,16 @@ fun main() {
     }
 }
 
-//fun main() = application {
+//fun main2() = application {
+//    val lifecycle = LifecycleRegistry()
+//    val windowState = rememberWindowState()
+//    LifecycleController(lifecycle, windowState)
+//
 //    Window(
 //        onCloseRequest = ::exitApplication,
 //        title = "NavTuto",
 //    ) {
-//        val component = remember { DefaultRootComponent(DefaultComponentContext(LifecycleRegistry())) }
+//        val component = remember { DefaultRootComponent(DefaultComponentContext(lifecycle)) }
 //        RootView(component)
 //    }
 //}

@@ -1,4 +1,4 @@
-package com.starfruit.util.compose
+package com.starfruit.util.decompose
 
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
