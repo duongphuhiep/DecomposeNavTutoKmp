@@ -10,17 +10,24 @@ androidx-espresso = "3.7.0"
 androidx-lifecycle = "2.9.5"
 androidx-testExt = "1.3.0"
 composeHotReload = "1.0.0-rc02"
-composeMultiplatform = "1.9.0"
+composeMultiplatform = "1.9.1"
 junit = "4.13.2"
 kotlin = "2.2.20"
 kotlinx-coroutines = "1.10.2"
 
 kermit = "2.0.8"
+ktor = "3.3.1"
+kodein = "7.28.0"
+browser = "1.9.0"
 composeIcons = "1.1.1"
 decompose = "3.4.0"
 
 jetbrainsKotlinxSerialization = "1.9.0"
 uiDesktop = "1.7.0"
+
+sqldelight = "2.1.0"
+ktlint-gradle = "13.1.0"
+skie = "0.10.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -63,6 +70,26 @@ decompose-compose-experimental = { module = "com.arkivanov.decompose:extensions-
 decompose-android = { module = "com.arkivanov.decompose:extensions-android", version.ref = "decompose" }
 decompose-jetpackComponentContext = { module = "com.arkivanov.decompose:jetpack-component-context", version.ref = "decompose" }
 
+sqldelight-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+sqldelight-jvm = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+sqldelight-js = { module = "app.cash.sqldelight:sqljs-driver", version.ref = "sqldelight" }
+sqldelight-dialect = { module = "app.cash.sqldelight:sqlite-3-38-dialect", version.ref = "sqldelight" }
+
+kodein-di = { module = "org.kodein.di:kodein-di", version.ref = "kodein" }
+kodein-diConf = { module = "org.kodein.di:kodein-di-conf", version.ref = "kodein" }
+kodein-diConf-js = { module = "org.kodein.di:kodein-di-conf-js", version.ref = "kodein" }
+kodein-diConf-jvm = { module = "org.kodein.di:kodein-di-conf-jvm", version.ref = "kodein" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-mock = { module = "io.ktor:ktor-client-mock", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
+androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -71,5 +98,9 @@ composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMul
 composeCompiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 
+skie = { id = "co.touchlab.skie", version.ref = "skie" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
 kotlin-plugin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+

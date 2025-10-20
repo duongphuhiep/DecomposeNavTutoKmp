@@ -11,6 +11,7 @@ plugins {
 
     alias(libs.plugins.kotlin.plugin.parcelize)
     alias(libs.plugins.kotlin.plugin.serialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -19,34 +20,35 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_11)
         }
     }
-    
+
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = true
         }
     }
-    
+
     jvm()
-    
+
     js {
         browser()
         binaries.executable()
     }
-    
+
     @OptIn(ExperimentalWasmDsl::class)
     wasmJs {
         browser()
         binaries.executable()
     }
-    
+
     sourceSets {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.sqldelight.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -65,6 +67,14 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
             implementation(libs.decompose.compose.experimental)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.auth)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.kodein.di)
+            implementation(libs.kodein.diConf)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -76,18 +86,44 @@ kotlin {
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
+            implementation(libs.sqldelight.jvm)
+            //implementation(libs.kodein.diConf.jvm)
         }
+        nativeMain.dependencies {
+            implementation(libs.sqldelight.native)
+        }
+//        webMain.dependencies {
+//            implementation(libs.kodein.diConf.js)
+//        }
+//        jsMain.dependencies {
+//            implementation(libs.sqldelight.js)
+//            implementation(
+//                npm("sql.js", "1.6.2")
+//            )
+//            implementation(
+//                devNpm("copy-webpack-plugin", "9.1.0")
+//            )
+//        }
     }
 }
 
 android {
     namespace = "com.starfruit.navtuto"
-    compileSdk = libs.versions.android.compileSdk.get().toInt()
+    compileSdk =
+        libs.versions.android.compileSdk
+            .get()
+            .toInt()
 
     defaultConfig {
         applicationId = "com.starfruit.navtuto"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk =
+            libs.versions.android.minSdk
+                .get()
+                .toInt()
+        targetSdk =
+            libs.versions.android.targetSdk
+                .get()
+                .toInt()
         versionCode = 1
         versionName = "1.0"
     }
@@ -119,6 +155,14 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "com.starfruit.navtuto"
             packageVersion = "1.0.0"
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("PlayerDb") {
+            packageName.set("com.starfruit.navtuto.data")
         }
     }
 }

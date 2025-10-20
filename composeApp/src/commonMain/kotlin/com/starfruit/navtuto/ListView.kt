@@ -45,7 +45,6 @@ fun ListView(component: ListComponent) {
             Text("Go back")
         }
     }
-
 }
 
 @Composable
