@@ -1,18 +1,22 @@
 package com.starfruit.navtuto
 
-import androidx.compose.runtime.remember
 import androidx.compose.ui.window.*
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.extensions.compose.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import com.starfruit.util.runOnUiThread
+import org.kodein.di.DI
+import org.kodein.di.conf.global
+import org.kodein.di.instance
 
 fun main() {
     val lifecycle = LifecycleRegistry()
 
+    val di = DI.global.initAppDependencies(DI.Module("context"){})
+    val rootComponentFactory by di.instance<RootComponent.Factory>()
     val root =
         runOnUiThread {
-            DefaultRootComponent(DefaultComponentContext(lifecycle))
+            rootComponentFactory(DefaultComponentContext(lifecycle))
         }
 
     application {

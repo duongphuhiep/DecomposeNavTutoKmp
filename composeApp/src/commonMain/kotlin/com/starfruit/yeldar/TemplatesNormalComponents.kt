@@ -1,37 +1,32 @@
-package com.starfruit.navtuto
+package com.starfruit.yeldar
 
 import com.arkivanov.decompose.ComponentContext
 
-interface DetailsComponent {
-    val itemId: Int
+interface NormalComponent {
+
     fun goBack()
 
     fun interface Factory {
         operator fun invoke(
             componentContext: ComponentContext,
-            itemId: Int,
             onGoBack: () -> Unit,
-        ): DetailsComponent
+        ): NormalComponent
     }
 }
 
-class DefaultDetailsComponent private constructor(
+class DefaultNormalComponent private constructor(
     componentContext: ComponentContext,
-    override val itemId: Int,
     private val onGoBack: () -> Unit,
-) : DetailsComponent, ComponentContext by componentContext {
-    override fun goBack() {
-        onGoBack()
-    }
+) : NormalComponent, ComponentContext by componentContext {
 
-    class Factory() : DetailsComponent.Factory {
+    override fun goBack() = onGoBack()
+
+    class Factory(): NormalComponent.Factory {
         override fun invoke(
             componentContext: ComponentContext,
-            itemId: Int,
             onGoBack: () -> Unit,
-        ): DetailsComponent = DefaultDetailsComponent(
+        ): NormalComponent = DefaultNormalComponent(
             componentContext = componentContext,
-            itemId = itemId,
             onGoBack = onGoBack,
         )
     }

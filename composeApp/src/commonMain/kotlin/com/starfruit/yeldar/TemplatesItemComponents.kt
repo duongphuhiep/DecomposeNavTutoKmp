@@ -1,30 +1,26 @@
-package com.starfruit.navtuto
+package com.starfruit.yeldar
 
 import com.arkivanov.decompose.ComponentContext
-import kotlinx.serialization.Serializable
 
 interface ItemComponent {
-    val item: Item
+    val item: String
 
     fun interface Factory {
         operator fun invoke(
             componentContext: ComponentContext,
-            item: Item
+            item: String
         ): ItemComponent
     }
 }
 
-@Serializable // kotlinx-serialization plugin must be applied
-data class Item(val id: Int, val data: String)
-
 class DefaultItemComponent private constructor(
     componentContext: ComponentContext,
-    override val item: Item,
+    override val item: String,
 ) : ItemComponent, ComponentContext by componentContext {
     class Factory(): ItemComponent.Factory {
         override fun invoke(
             componentContext: ComponentContext,
-            item: Item
+            item: String
         ): ItemComponent = DefaultItemComponent(
             componentContext = componentContext,
             item = item

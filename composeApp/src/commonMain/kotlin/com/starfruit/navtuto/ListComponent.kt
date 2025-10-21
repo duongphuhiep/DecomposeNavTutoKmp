@@ -4,20 +4,24 @@ package com.starfruit.navtuto
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.router.children.transientNavStateSaver
-import com.arkivanov.decompose.router.items.Items
-import com.arkivanov.decompose.router.items.ItemsNavigation
-import com.arkivanov.decompose.router.items.LazyChildItems
-import com.arkivanov.decompose.router.items.childItems
-import com.arkivanov.decompose.router.items.setItems
+import com.arkivanov.decompose.router.items.*
+
 
 interface ListComponent {
     val items: LazyChildItems<Item, ItemComponent>
     fun goBack()
+
+    fun interface Factory {
+        operator fun invoke(
+            componentContext: ComponentContext,
+            onGoBack: () -> Unit,
+        ): ListComponent
+    }
 }
 
-class DefaultListComponent(
+class DefaultListComponent private constructor(
     componentContext: ComponentContext,
+    private val itemComponentFactory: ItemComponent.Factory,
     private val onGoBack: () -> Unit,
 ) : ListComponent, ComponentContext by componentContext {
     private val navigation = ItemsNavigation<Item>()
@@ -39,15 +43,11 @@ class DefaultListComponent(
                 )
             },
         ) { item, childComponentContext ->
-            DefaultItemComponent(
+            itemComponentFactory(
                 componentContext = childComponentContext,
                 item = item,
             )
         }
-
-    override fun goBack() {
-        onGoBack()
-    }
 
     // Add items
     fun addMoreItems(newItems: List<Item>) {
@@ -62,5 +62,20 @@ class DefaultListComponent(
     // Replace all items
     fun replaceAllItems(newItems: List<Item>) {
         navigation.setItems { newItems }
+    }
+
+    override fun goBack() = onGoBack()
+
+    class Factory(
+        private val itemComponentFactory: ItemComponent.Factory,
+    ): ListComponent.Factory {
+        override fun invoke(
+            componentContext: ComponentContext,
+            onGoBack: () -> Unit,
+        ): ListComponent = DefaultListComponent(
+            componentContext = componentContext,
+            itemComponentFactory = itemComponentFactory,
+            onGoBack = onGoBack,
+        )
     }
 }

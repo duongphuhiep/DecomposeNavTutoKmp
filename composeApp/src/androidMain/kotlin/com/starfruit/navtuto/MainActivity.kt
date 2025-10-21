@@ -4,37 +4,28 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.retainedComponent
-import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import org.kodein.di.DI
-import org.kodein.di.DIAware
-import org.kodein.di.bind
+import org.kodein.di.conf.global
 import org.kodein.di.instance
-import org.kodein.di.subDI
 
-class MainActivity : ComponentActivity()/*, DIAware*/ {
-//    override val di: DI by subDI(AppDi) {
-//        // This makes 'this Activity' available as context for contexted bindings
-//        bind<ComponentActivity>() with instance(this@MainActivity)
-//    }
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        // create a DI container scoped to the activity
+        // val scopedDi = DI.global.di.on(this)
+        // then use this `scopedDi` to resolve the RootComponent instead of the `DI.global.di`
+        // if we do that then it is possible to inject the current activity into the Components
+        // checkout the [ScopedLifetimeTest]
+
+        val rootComponentFactory by DI.global.di.instance<RootComponent.Factory>()
         val rootComponent = retainedComponent {
-            DefaultRootComponent(it)
+            rootComponentFactory(it)
         }
         setContent {
             RootView(rootComponent)
         }
     }
-}
-
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    val rootComponent = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
-    RootView(rootComponent)
 }

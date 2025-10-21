@@ -4,7 +4,7 @@ package com.starfruit.util
  * A class that wraps either a concrete value or a value provider, allowing nullable values.
  * Can be instantiated with a direct value `Optional(value)` or a provider function `Optional { value }`.
  *
- * A `Optional<Something>` is equivalent to `Something?`. It is recommended to use `Something?`
+ * A `Optional<Something>` is 1-1 equivalent to `Something?`. It is recommended to use `Something?`
  * whenever possible.
  *
  * One use case which `Something?` isn't possible is the `Value<T: Any>` defined

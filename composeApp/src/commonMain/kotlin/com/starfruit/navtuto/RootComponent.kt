@@ -1,99 +1,123 @@
 package com.starfruit.navtuto
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.decompose.router.stack.StackNavigation
-import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
+import com.starfruit.navtuto.RootComponent.Child
 import kotlinx.serialization.Serializable
 
-interface RootComponent {
-    val childStack: Value<ChildStack<Configuration, Child>>
 
-    sealed class Child {
-        data class ScreenA(val component: ScreenAComponent) : Child()
-        data class ScreenB(val component: ScreenBComponent) : Child()
-        data class Pages(val component: PagesComponent) : Child()
-        data class Panels(val component: PanelsComponent) : Child()
-        data class List(val component: ListComponent) : Child()
+interface RootComponent {
+    val childStack: Value<ChildStack<*, Child>>
+
+    sealed interface Child {
+        data class ScreenA(val component: ScreenAComponent) : Child
+        data class ScreenB(val component: ScreenBComponent) : Child
+        data class Pages(val component: PagesComponent) : Child
+        data class Panels(val component: PanelsComponent) : Child
+        data class List(val component: ListComponent) : Child
     }
 
-    @Serializable
-    sealed class Configuration {
-        @Serializable
-        data object ScreenA : Configuration()
-        @Serializable
-        data class ScreenB(val text: String) : Configuration()
-        @Serializable
-        data object Pages : Configuration()
-        @Serializable
-        data object Panels : Configuration()
-        @Serializable
-        data object List : Configuration()
+    fun interface Factory {
+        operator fun invoke(
+            componentContext: ComponentContext,
+        ): RootComponent
     }
 }
 
-class DefaultRootComponent(componentContext: ComponentContext) : RootComponent,
+class DefaultRootComponent private constructor(
+    componentContext: ComponentContext,
+    private val screenAComponentFactory: ScreenAComponent.Factory,
+    private val screenBComponentFactory: ScreenBComponent.Factory,
+    private val pagesComponentFactory: PagesComponent.Factory,
+    private val panelsComponentFactory: PanelsComponent.Factory,
+    private val listComponentFactory: ListComponent.Factory,
+) : RootComponent,
     ComponentContext by componentContext {
-    private val navigation = StackNavigation<RootComponent.Configuration>()
-    override val childStack = childStack(
+    private val navigation = StackNavigation<Configuration>()
+    override val childStack: Value<ChildStack<*, Child>> = childStack(
         source = navigation,
-        serializer = RootComponent.Configuration.serializer(),
-        initialConfiguration = RootComponent.Configuration.ScreenA,
+        serializer = Configuration.serializer(),
+        initialConfiguration = Configuration.ScreenA,
         handleBackButton = true,
         childFactory = ::createChild
     )
 
     private fun createChild(
-        config: RootComponent.Configuration,
+        config: Configuration,
         context: ComponentContext
-    ): RootComponent.Child {
+    ): Child {
         return when (config) {
-            is RootComponent.Configuration.ScreenA ->
-                RootComponent.Child.ScreenA(
-                    DefaultScreenAComponent(
+            is Configuration.ScreenA ->
+                Child.ScreenA(
+                    screenAComponentFactory(
                         componentContext = context,
                         onGoToScreenB = {
-                            navigation.pushNew(RootComponent.Configuration.ScreenB(it))
+                            navigation.pushNew(Configuration.ScreenB(it))
                         },
                         onGoToPages = {
-                            navigation.pushNew(RootComponent.Configuration.Pages)
+                            navigation.pushNew(Configuration.Pages)
                         },
                         onGoToPanels = {
-                            navigation.pushNew(RootComponent.Configuration.Panels)
+                            navigation.pushNew(Configuration.Panels)
                         },
                         onGoToList = {
-                            navigation.pushNew(RootComponent.Configuration.List)
+                            navigation.pushNew(Configuration.List)
                         }
                     )
                 )
-            is RootComponent.Configuration.ScreenB ->
-                RootComponent.Child.ScreenB(
-                    DefaultScreenBComponent(
+            is Configuration.ScreenB ->
+                Child.ScreenB(
+                    screenBComponentFactory(
                         componentContext = context,
                         text = config.text,
-                        onGoBack = {
-                            navigation.pop()
-                        },
+                        onGoBack = navigation::pop,
                     ))
-            is RootComponent.Configuration.Pages ->
-                RootComponent.Child.Pages(
-                    DefaultPagesComponent(context)
+            is Configuration.Pages ->
+                Child.Pages(
+                    pagesComponentFactory(context)
                 )
-            is RootComponent.Configuration.Panels ->
-                RootComponent.Child.Panels(
-                    DefaultPanelsComponent(context, onGoBack = {
-                        navigation.pop()
-                    })
+            is Configuration.Panels ->
+                Child.Panels(
+                    panelsComponentFactory(context, onGoBack = navigation::pop)
                 )
-            is RootComponent.Configuration.List ->
-                RootComponent.Child.List(
-                    DefaultListComponent(context, onGoBack = {
-                        navigation.pop()
-                    })
+            is Configuration.List ->
+                Child.List(
+                    listComponentFactory(context, onGoBack = navigation::pop)
                 )
         }
+    }
+
+    @Serializable
+    private sealed interface Configuration {
+        @Serializable
+        data object ScreenA : Configuration
+        @Serializable
+        data class ScreenB(val text: String) : Configuration
+        @Serializable
+        data object Pages : Configuration
+        @Serializable
+        data object Panels : Configuration
+        @Serializable
+        data object List : Configuration
+    }
+
+    class Factory(
+        private val screenAComponentFactory: ScreenAComponent.Factory,
+        private val screenBComponentFactory: ScreenBComponent.Factory,
+        private val pagesComponentFactory: PagesComponent.Factory,
+        private val panelsComponentFactory: PanelsComponent.Factory,
+        private val listComponentFactory: ListComponent.Factory,
+    ): RootComponent.Factory {
+        override fun invoke(
+            componentContext: ComponentContext,
+        ): RootComponent = DefaultRootComponent(
+            componentContext = componentContext,
+            screenAComponentFactory = screenAComponentFactory,
+            screenBComponentFactory = screenBComponentFactory,
+            pagesComponentFactory = pagesComponentFactory,
+            panelsComponentFactory = panelsComponentFactory,
+            listComponentFactory = listComponentFactory,
+        )
     }
 }

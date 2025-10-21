@@ -4,27 +4,30 @@ package com.starfruit.navtuto
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.router.panels.ChildPanels
-import com.arkivanov.decompose.router.panels.ChildPanelsMode
-import com.arkivanov.decompose.router.panels.Panels
-import com.arkivanov.decompose.router.panels.PanelsNavigation
-import com.arkivanov.decompose.router.panels.activateDetails
-import com.arkivanov.decompose.router.panels.childPanels
-import com.arkivanov.decompose.router.panels.dismissDetails
-import com.arkivanov.decompose.router.panels.setMode
+import com.arkivanov.decompose.router.panels.*
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
 
+
 interface PanelsComponent {
     val panels: Value<ChildPanels<*, MainComponent, *, DetailsComponent, Nothing, Nothing>>
 
     fun setMode(mode: ChildPanelsMode)
+
+    fun interface Factory {
+        operator fun invoke(
+            componentContext: ComponentContext,
+            onGoBack: () -> Unit,
+        ): PanelsComponent
+    }
 }
 
-class DefaultPanelsComponent(
+class DefaultPanelsComponent private constructor(
     componentContext: ComponentContext,
+    private val mainComponentFactory: MainComponent.Factory,
+    private val detailsComponentFactory: DetailsComponent.Factory,
     val onGoBack: () -> Unit,
 ) : PanelsComponent, ComponentContext by componentContext {
 
@@ -38,14 +41,14 @@ class DefaultPanelsComponent(
             initialPanels = { Panels(main = Unit) },
             handleBackButton = true,
             mainFactory = { _, ctx ->
-                DefaultMainComponent(
+                mainComponentFactory(
                     componentContext = ctx,
                     onSelectItem = { nav.activateDetails(details = DetailsConfig(it)) },
                     onGoBack = onGoBack
                 )
             },
             detailsFactory = { cfg, ctx ->
-                DefaultDetailsComponent(
+                detailsComponentFactory(
                     componentContext = ctx,
                     itemId = cfg.itemId,
                     onGoBack = nav::dismissDetails,
@@ -53,10 +56,23 @@ class DefaultPanelsComponent(
             },
         )
 
-    override fun setMode(mode: ChildPanelsMode) {
-        nav.setMode(mode)
-    }
+    override fun setMode(mode: ChildPanelsMode) = nav.setMode(mode)
 
     @Serializable
     private data class DetailsConfig(val itemId: Int)
+
+    class Factory(
+        private val mainComponentFactory: MainComponent.Factory,
+        private val detailsComponentFactory: DetailsComponent.Factory,
+    ) : PanelsComponent.Factory {
+        override fun invoke(
+            componentContext: ComponentContext,
+            onGoBack: () -> Unit,
+        ): PanelsComponent = DefaultPanelsComponent(
+            componentContext = componentContext,
+            mainComponentFactory = mainComponentFactory,
+            detailsComponentFactory = detailsComponentFactory,
+            onGoBack = onGoBack,
+        )
+    }
 }

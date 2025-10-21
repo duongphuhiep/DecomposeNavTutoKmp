@@ -1,24 +1,26 @@
 package com.starfruit.navtuto
 
 import com.arkivanov.decompose.ComponentContext
-import com.arkivanov.decompose.router.pages.ChildPages
-import com.arkivanov.decompose.router.pages.Pages
-import com.arkivanov.decompose.router.pages.PagesNavigation
-import com.arkivanov.decompose.router.pages.childPages
-import com.arkivanov.decompose.router.pages.select
-import com.arkivanov.decompose.router.pages.selectNext
-import com.arkivanov.decompose.router.pages.selectPrev
+import com.arkivanov.decompose.router.pages.*
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
+
 
 interface PagesComponent {
     val pages: Value<ChildPages<*, PageComponent>>
 
     fun selectPage(index: Int)
+
+    fun interface Factory {
+        operator fun invoke(
+            componentContext: ComponentContext,
+        ): PagesComponent
+    }
 }
 
-class DefaultPagesComponent(
+class DefaultPagesComponent private constructor(
     componentContext: ComponentContext,
+    private val pageComponentFactory: PageComponent.Factory
 ) : PagesComponent, ComponentContext by componentContext {
 
     private val navigation = PagesNavigation<Config>()
@@ -34,7 +36,7 @@ class DefaultPagesComponent(
                 )
             },
         ) { config, childComponentContext ->
-            DefaultPageComponent(
+            pageComponentFactory(
                 componentContext = childComponentContext,
                 data = config.data,
             )
@@ -46,4 +48,15 @@ class DefaultPagesComponent(
 
     @Serializable // kotlinx-serialization plugin must be applied
     private data class Config(val data: String)
+
+    class Factory(
+        private val pageComponentFactory: PageComponent.Factory
+    ): PagesComponent.Factory {
+        override fun invoke(
+            componentContext: ComponentContext,
+        ): PagesComponent = DefaultPagesComponent(
+            componentContext = componentContext,
+            pageComponentFactory = pageComponentFactory,
+        )
+    }
 }

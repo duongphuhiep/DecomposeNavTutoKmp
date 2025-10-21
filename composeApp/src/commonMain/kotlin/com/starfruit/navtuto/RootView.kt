@@ -14,6 +14,10 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.kodein.di.DI
+import org.kodein.di.conf.ConfigurableDI
+import org.kodein.di.conf.global
+import org.kodein.di.instance
 
 // Create a CompositionLocal
 val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
@@ -54,7 +58,14 @@ fun RootView(component: RootComponent) {
     }
 }
 
-val rootComponentPreview = DefaultRootComponent(DefaultComponentContext(LifecycleRegistry()))
+val rootComponentPreview: RootComponent get() {
+    val di = ConfigurableDI().initAppDependencies(
+        DI.Module("preview") {}
+    )
+    val rootComponentFactory by di.instance<RootComponent.Factory>()
+    val rootLifecycle = LifecycleRegistry()
+    return rootComponentFactory(DefaultComponentContext(rootLifecycle))
+}
 
 @Composable
 @Preview(showBackground = true, widthDp = 480, heightDp = 800)

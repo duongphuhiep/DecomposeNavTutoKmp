@@ -9,9 +9,11 @@ import com.arkivanov.decompose.value.operator.map
 import com.starfruit.util.Optional
 import kotlinx.serialization.Serializable
 
+
 interface ScreenAComponent {
     val alertDialog: Value<Optional<AlertDialogComponent>>
     val text: Value<String>
+
     /**
      * null if the dialog is not show up
      * true if the dialog is confirmed
@@ -25,10 +27,21 @@ interface ScreenAComponent {
     fun goToPages()
     fun goToPanels()
     fun goToList()
+
+    fun interface Factory {
+        operator fun invoke(
+            componentContext: ComponentContext,
+            onGoToScreenB: (text: String) -> Unit,
+            onGoToPages: () -> Unit,
+            onGoToPanels: () -> Unit,
+            onGoToList: () -> Unit
+        ): ScreenAComponent
+    }
 }
 
-class DefaultScreenAComponent(
+class DefaultScreenAComponent private constructor(
     componentContext: ComponentContext,
+    private val alertDialogComponentFactory: AlertDialogComponent.Factory,
     private val onGoToScreenB: (text: String) -> Unit,
     private val onGoToPages: () -> Unit,
     private val onGoToPanels: () -> Unit,
@@ -41,7 +54,7 @@ class DefaultScreenAComponent(
             serializer = AlertDialogConfig.serializer(), // Or null to disable navigation state saving
             handleBackButton = true, // Close the dialog on back button press
         ) { config, childComponentContext ->
-            DefaultAlertDialogComponent(
+            alertDialogComponentFactory(
                 componentContext = childComponentContext,
                 text = config.text,
                 onDismissed = ::dialogDismissed,
@@ -54,7 +67,7 @@ class DefaultScreenAComponent(
     private val _dialogIsConfirmed = MutableValue(Optional<Boolean>(null))
     override val dialogIsConfirmed: Value<Optional<Boolean>> = _dialogIsConfirmed
 
-    val _text = MutableValue("")
+    private val _text = MutableValue("")
     override val text: Value<String> = _text
 
     override fun goToScreenB() {
@@ -68,15 +81,19 @@ class DefaultScreenAComponent(
     override fun openAlertDialog() {
         dialogNavigation.activate(AlertDialogConfig(text.value))
     }
+
     override fun resetDialogResult() {
         _dialogIsConfirmed.value = Optional(null)
     }
+
     override fun goToPages() {
         onGoToPages()
     }
+
     override fun goToPanels() {
         onGoToPanels()
     }
+
     override fun goToList() {
         onGoToList()
     }
@@ -97,5 +114,23 @@ class DefaultScreenAComponent(
 
     @Serializable
     private data class AlertDialogConfig(val text: String)
-}
 
+    class Factory(
+        private val alertDialogComponentFactory: AlertDialogComponent.Factory,
+    ) : ScreenAComponent.Factory {
+        override fun invoke(
+            componentContext: ComponentContext,
+            onGoToScreenB: (text: String) -> Unit,
+            onGoToPages: () -> Unit,
+            onGoToPanels: () -> Unit,
+            onGoToList: () -> Unit
+        ): ScreenAComponent = DefaultScreenAComponent(
+            componentContext = componentContext,
+            alertDialogComponentFactory = alertDialogComponentFactory,
+            onGoToScreenB = onGoToScreenB,
+            onGoToPages = onGoToPages,
+            onGoToPanels = onGoToPanels,
+            onGoToList = onGoToList
+        )
+    }
+}

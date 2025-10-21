@@ -4,6 +4,7 @@ import org.kodein.di.*
 import org.kodein.di.bindings.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class ScopedLifetimeTest {
     class MyActivity(var name: String): AutoCloseable {

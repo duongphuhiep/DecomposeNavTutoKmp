@@ -4,15 +4,27 @@ import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import org.kodein.di.DI
+import org.kodein.di.conf.ConfigurableDI
+import org.kodein.di.instance
+import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
-import com.arkivanov.decompose.router.items.*
 
 class AppTest {
+    val di = ConfigurableDI().initAppDependencies(
+        DI.Module("contextAndMock") {}
+    )
     val rootLifecycle = LifecycleRegistry()
-    val rootComponent: RootComponent = DefaultRootComponent(DefaultComponentContext(rootLifecycle))
+    lateinit var rootComponent: RootComponent;
+
+    @BeforeTest
+    fun setup() {
+        val rootComponentFactory by di.instance<RootComponent.Factory>()
+        rootComponent = rootComponentFactory(DefaultComponentContext(rootLifecycle))
+    }
 
     @Test
     fun `happy path - update text on ScreenA then go to screenB`() {
@@ -32,7 +44,7 @@ class AppTest {
         // the "1234" is displayed on the screenB
         assertEquals("1234", currentScreen.component.text)
 
-        currentScreen.component.GoBack()
+        currentScreen.component.goBack()
 
         //the current active screen is screenA again
         currentScreen = rootComponent.childStack.active.instance
@@ -67,7 +79,7 @@ class AppTest {
         assertEquals("1234", screenB.component.text)
 
         println("Go back to screenA")
-        screenB.component.GoBack()
+        screenB.component.goBack()
 
         //the current active screen is screenA again
         val screenA1 = rootComponent.childStack.active.instance
