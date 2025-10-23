@@ -1,8 +1,22 @@
 package com.starfruit.navtuto
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -53,4 +67,65 @@ class ReactivityTest {
             state.value = State(i)
         }
     }
+
+//    @Composable
+//    fun Bidon() {
+//        val state = MutableStateFlow<Int>(1)
+//        val scope = rememberCoroutineScope()
+//        val x = state.collectAsState(scope)
+//    }
+//
+//    @Test
+//    fun tryStateFlow2() = runTest {
+//        val scope = rememberCoroutineScope()
+//        val state = MutableStateFlow<Int>(1)
+//        val x = state.collectAsState(it)
+//
+//        withContext(Dispatchers.Default.limitedParallelism(2)) {
+//
+//            val collectingJob = withTimeout(3000) {
+//                launch { //fire and forget
+//                    state.collect {
+//                        println("🔔 value is changed $it")
+//                    }
+//                }
+//            }
+//
+//            val emittingJob = launch {
+//                for (i in 10..20) {
+//                    state.emit(i)
+//                    delay(300)
+//                }
+//            }
+//
+//            emittingJob.join()
+//            collectingJob.join()
+//        }
+//    }
+//
+    @Test
+    fun tryStateFlow() = runTest {
+        val state = MutableStateFlow(1)
+        withContext(Dispatchers.Default.limitedParallelism(2)) {
+
+            try {
+                val collectingJob = withTimeout(3000) {
+                    launch { //fire and forget
+                        state.collect {
+                            println("🔔 value is changed $it")
+                        }
+                    }
+                }
+            }
+            catch (ex: TimeoutCancellationException) {}
+
+        }
+        async {
+            for (i in 10..20) {
+                state.emit(i)
+                delay(300)
+            }
+        }.await()
+    }
+
 }

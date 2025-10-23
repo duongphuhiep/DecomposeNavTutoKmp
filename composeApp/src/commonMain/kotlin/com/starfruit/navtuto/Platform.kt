@@ -8,4 +8,8 @@ interface Platform {
 
 expect fun getPlatform(): Platform
 
+/**
+ * Provide Platform specifics dependencies such as
+ * SqlDriver, Dispatchers.IO
+ */
 expect val platformModule: DI.Module

@@ -1,0 +1,86 @@
+/**
+ * Key-Value Cache store
+ */
+CREATE TABLE kvCache(
+    key TEXT PRIMARY KEY NOT NULL,
+    value TEXT,
+    /**
+     * UTC YYYYY-MM-DDThh:mm:ss
+     */
+    createdAt TEXT NOT NULL,
+    /**
+     * UTC YYYYY-MM-DDThh:mm:ss
+     */
+    lastAccess TEXT NOT NULL,
+    /**
+     * UTC YYYYY-MM-DDThh:mm:ss
+     */
+    expiryAt TEXT
+);
+CREATE INDEX kvCache_expiryAt ON kvCache(expiryAt);
+CREATE INDEX kvCache_lastAccess ON kvCache(lastAccess);
+
+/**
+ * Add a new Key-Value-expiryAt to the cache or Update the existing Key with the given info
+ */
+upsert:
+INSERT INTO kvCache (key, value, createdAt, lastAccess, expiryAt)
+VALUES (
+    ?,
+    ?,
+    strftime('%Y-%m-%dT%H:%M:%f', 'now'),
+    strftime('%Y-%m-%dT%H:%M:%f', 'now'),
+    ?
+)
+ON CONFLICT(key) DO UPDATE SET
+    value = excluded.value,
+    lastAccess = strftime('%Y-%m-%dT%H:%M:%f', 'now'),
+    expiryAt = excluded.expiryAt;
+
+/**
+ * Get the (cached) Value of the given Key and update the "lastAccess"
+ */
+get:
+UPDATE kvCache
+SET lastAccess = strftime('%Y-%m-%dT%H:%M:%f', 'now')
+WHERE key = ?
+RETURNING key, value, createdAt, lastAccess, expiryAt;
+
+/**
+ * Get the (cached) Value of the given Key without updating the "lastAccess"
+ */
+peek:
+SELECT * FROM kvCache WHERE key = ?;
+
+/**
+ * Get all cached Key-Value, no impact on "lastAccess"
+ */
+peekAll:
+SELECT * FROM kvCache;
+
+/**
+ * Remove a Key
+ */
+remove:
+DELETE FROM kvCache WHERE key = ?;
+
+/**
+ * Clear all expired Key-Value.
+ */
+removeExpired:
+DELETE FROM kvCache
+WHERE expiryAt IS NOT NULL AND expiryAt != ''
+  AND expiryAt <= strftime('%Y-%m-%dT%H:%M:%f', 'now');
+
+/**
+ * Clear all Key-Value which has not been access since a given time
+ * @param since Utc ISO format string (eg. "2023-03-15T13:45:30.123")
+ */
+removeUnused:
+DELETE FROM kvCache WHERE lastAccess <= :since;
+
+/**
+ * Empty the cache
+ */
+removeAll:
+DELETE FROM kvCache;

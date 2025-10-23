@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
 
+            implementation(libs.kotlinx.datetime)
             implementation(libs.material3.windowSizeClass)
             implementation(libs.material3.adaptive)
             implementation(libs.kermit)
@@ -75,6 +76,7 @@ kotlin {
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.kodein.di)
             implementation(libs.kodein.diConf)
+            implementation(libs.sqldelight.asyncExtensions)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -87,14 +89,13 @@ kotlin {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutinesSwing)
             implementation(libs.sqldelight.jvm)
-            //implementation(libs.kodein.diConf.jvm)
         }
         nativeMain.dependencies {
             implementation(libs.sqldelight.native)
         }
-//        webMain.dependencies {
-//            implementation(libs.kodein.diConf.js)
-//        }
+        androidUnitTest.dependencies {
+            implementation(libs.sqldelight.jvm)
+        }
 //        jsMain.dependencies {
 //            implementation(libs.sqldelight.js)
 //            implementation(
@@ -163,6 +164,8 @@ sqldelight {
     databases {
         create("PlayerDb") {
             packageName.set("com.starfruit.navtuto.data")
+            dialect(libs.sqldelight.dialect)
+            generateAsync.set(true)
         }
     }
 }

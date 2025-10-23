@@ -1,5 +1,8 @@
 package com.starfruit.navtuto
 
+import app.cash.sqldelight.db.SqlDriver
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -39,5 +42,18 @@ class LanguageFeatureTest {
         SomeA(123)
         assertEquals(1, SomeA.ctorCounter)
         assertEquals(2, SomeA.initCounter)
+    }
+
+    fun interface MyStringFactory {
+        suspend operator fun invoke(): String
+    }
+    @Test
+    fun suspendFactoryFunTest() = runTest {
+        val factory = MyStringFactory {
+            delay(100) // you can call suspend functions here
+            "Hello from factory"
+        }
+        val result = factory() // invokes suspend operator fun
+        println(result)
     }
 }
