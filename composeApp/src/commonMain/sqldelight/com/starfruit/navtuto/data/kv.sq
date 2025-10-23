@@ -4,6 +4,7 @@
 CREATE TABLE kv(
     key TEXT PRIMARY KEY NOT NULL,
     value TEXT,
+    valueBin BLOB,
      /**
       * UTC YYYY-MM-DDThh:mm:ss
       */
@@ -18,12 +19,13 @@ CREATE TABLE kv(
  * Add a new Key-Value to the store or Update the existing Key with the given Value
  */
 upsert:
-INSERT INTO kv (key, value, createdAt, updatedAt)
-VALUES (?, ?,
+INSERT INTO kv (key, value, valueBin, createdAt, updatedAt)
+VALUES (?, ?, ?,
     strftime('%Y-%m-%dT%H:%M:%f', 'now'),
     strftime('%Y-%m-%dT%H:%M:%f', 'now'))
 ON CONFLICT(key) DO UPDATE SET
     value = excluded.value,
+    valueBin = excluded.valueBin,
     updatedAt = excluded.value;
 
 /**

@@ -1,6 +1,12 @@
-# Playground to learn the [Decompose](https://arkivanov.github.io/Decompose) framework
+# Playground to learn the Multiplatform development with Kotlin Compose 
 
-[Why decompose?](./Navigation%20and%20MVVM%20framework%20comparison.md)
+* [Decompose](https://arkivanov.github.io/Decompose) framework -> [Why decompose?](./Navigation%20and%20MVVM%20framework%20comparison.md)
+* [Kodein](https://github.com/kosi-libs/Kodein) framework -> [Why kodein?](./DI%20framework.md)
+* [SqlDelight](https://sqldelight.github.io/sqldelight/2.1.0/) integration
+  * when the app needs to persist some data, there is no better option for now
+  * the project also include a generic [Key-Value store](./composeApp/src/commonMain/sqldelight/com/starfruit/navtuto/data/kv.sq) and a [Cached Key-Value store](./composeApp/src/commonMain/sqldelight/com/starfruit/navtuto/data/kvCache.sq), which will be useful for any kind of application
+* TODO [KSafe](https://github.com/ioannisa/KSafe). We can use these generic store to persist any serializable data as long as the data structure is not very important, and we don't have to query, filter them much.
+  * when the app needs to store some sensitive data (accessToken..)
 
 This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
 

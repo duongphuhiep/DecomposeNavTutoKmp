@@ -77,12 +77,14 @@ kotlin {
             implementation(libs.kodein.di)
             implementation(libs.kodein.diConf)
             implementation(libs.sqldelight.asyncExtensions)
+            implementation(libs.jetbrains.kotlinx.kotlinxSerializationCbor)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
 
             implementation(libs.jetbrains.kotlinx.kotlinxSerializationCore)
             implementation(libs.jetbrains.kotlinx.kotlinxSerializationJson)
+            implementation(libs.jetbrains.kotlinx.kotlinxSerializationProtobuf)
             implementation(libs.jetbrains.kotlinx.coroutines.test)
         }
         jvmMain.dependencies {

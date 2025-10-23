@@ -64,6 +64,8 @@ androidx-compose-material-icons-extended = { group = "androidx.compose.material"
 
 jetbrains-kotlinx-kotlinxSerializationCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "jetbrainsKotlinxSerialization" }
 jetbrains-kotlinx-kotlinxSerializationJson = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "jetbrainsKotlinxSerialization" }
+jetbrains-kotlinx-kotlinxSerializationProtobuf = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-protobuf", version.ref = "jetbrainsKotlinxSerialization" }
+jetbrains-kotlinx-kotlinxSerializationCbor = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-cbor", version.ref = "jetbrainsKotlinxSerialization" }
 jetbrains-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version = "1.10.2" }
 
 decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "decompose" }
