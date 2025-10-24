@@ -6,7 +6,12 @@ import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.InstanceKeeperDispatcher
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.essenty.statekeeper.StateKeeperDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+import kotlin.coroutines.CoroutineContext
 import kotlin.test.*
 
 class StateKeeperTest {
@@ -113,6 +118,19 @@ class StateKeeperTest {
             }
         }
 
+        class RetainedCoroutineScope(mainContext: CoroutineContext) : InstanceKeeper.Instance {
+            // The scope survives Android configuration changes
+            private val scope = CoroutineScope(mainContext + SupervisorJob())
 
+            fun foo() {
+                scope.launch {
+                    // Do the job
+                }
+            }
+
+            override fun onDestroy() {
+                scope.cancel() // Cancel the scope when the instance is destroyed
+            }
+        }
     }
 }

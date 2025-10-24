@@ -60,7 +60,7 @@ class SerializationTest {
 
     @OptIn(ExperimentalSerializationApi::class)
     @Test
-    fun serializationTest_cbor_unhappy_path() {
+    fun serializationTest_cbor_difficult_path() {
         @Serializable
         data class User(val name: String, val age: Int)
 
@@ -72,10 +72,10 @@ class SerializationTest {
         @Serializable
         data class UserV2(val name: String, val sex: Int = 2)
 
-        //deserialize
+        //deserialization: Detect unrecognized field + Detect missing field
         val user1: UserV2 = Cbor { ignoreUnknownKeys=true }.decodeFromByteArray(UserV2.serializer(), bytes)
 
-        //and it is not good!
+        //and it is ok!
         assertEquals(2, user1.sex)
     }
 

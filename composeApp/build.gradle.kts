@@ -78,6 +78,8 @@ kotlin {
             implementation(libs.kodein.diConf)
             implementation(libs.sqldelight.asyncExtensions)
             implementation(libs.jetbrains.kotlinx.kotlinxSerializationCbor)
+            implementation(libs.cryptography.core)
+            implementation(libs.cryptography.providerOptimal)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

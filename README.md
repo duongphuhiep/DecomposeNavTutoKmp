@@ -2,11 +2,13 @@
 
 * [Decompose](https://arkivanov.github.io/Decompose) framework -> [Why decompose?](./Navigation%20and%20MVVM%20framework%20comparison.md)
 * [Kodein](https://github.com/kosi-libs/Kodein) framework -> [Why kodein?](./DI%20framework.md)
-* [SqlDelight](https://sqldelight.github.io/sqldelight/2.1.0/) integration
-  * when the app needs to persist some data, there is no better option for now
-  * the project also include a generic [Key-Value store](./composeApp/src/commonMain/sqldelight/com/starfruit/navtuto/data/kv.sq) and a [Cached Key-Value store](./composeApp/src/commonMain/sqldelight/com/starfruit/navtuto/data/kvCache.sq), which will be useful for any kind of application
-* TODO [KSafe](https://github.com/ioannisa/KSafe). We can use these generic store to persist any serializable data as long as the data structure is not very important, and we don't have to query, filter them much.
+* [SqlDelight](https://sqldelight.github.io/sqldelight/2.1.0/) - when the app needs to persist local data, there is no better option for now. The project includes also a generic [Key-Value store](./composeApp/src/commonMain/sqldelight/com/starfruit/navtuto/data/kv.sq) and a [Cached Key-Value store](./composeApp/src/commonMain/sqldelight/com/starfruit/navtuto/data/kvCache.sq):
+  * These generic storage data model is useful for persisting any serializable data, but you can only query them by key, not by data content.
+  * it is recommended to persisting `@Serializable` object in the CBOR binary format (valueBin column). [This format is safer than the Schemaless-Protobuf format](./composeApp/src/commonTest/kotlin/com/starfruit/navtuto/SerializationTest.kt#L42), and more efficient than String/Json.
+* TODO [KSafe](https://github.com/ioannisa/KSafe). 
   * when the app needs to store some sensitive data (accessToken..)
+
+----
 
 This is a Kotlin Multiplatform project targeting Android, iOS, Web, Desktop (JVM).
 
