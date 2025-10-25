@@ -94,43 +94,4 @@ class StateKeeperTest {
             }
         }
     }
-
-    fun `Retained state`() {
-        class SomeComponent(componentContext: ComponentContext) :
-            ComponentContext by componentContext {
-            private val retainedState =
-                instanceKeeper.getOrCreate {
-                    RetainedState(
-                        savedState = stateKeeper.consume(
-                            key = "SAVED_STATE",
-                            strategy = State.serializer()
-                        )
-                    )
-                }
-
-            init {
-                // Called when it's time to save the state
-                stateKeeper.register(
-                    key = "SAVED_STATE",
-                    strategy = State.serializer(),
-                    supplier = retainedState::state
-                )
-            }
-        }
-
-        class RetainedCoroutineScope(mainContext: CoroutineContext) : InstanceKeeper.Instance {
-            // The scope survives Android configuration changes
-            private val scope = CoroutineScope(mainContext + SupervisorJob())
-
-            fun foo() {
-                scope.launch {
-                    // Do the job
-                }
-            }
-
-            override fun onDestroy() {
-                scope.cancel() // Cancel the scope when the instance is destroyed
-            }
-        }
-    }
 }
