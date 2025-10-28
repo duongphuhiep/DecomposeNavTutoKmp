@@ -55,13 +55,19 @@ private fun ListPreview() {
     }
 }
 
-val listComponentPreview = object: ListComponent {
-    override val items: LazyChildItems<Item, ItemComponent> = LazyChildItemsPreview(generatePreviewItems())
-    override fun goBack() {}
-    fun generatePreviewItems(): Map<Item, ItemComponent> {
-        return (1..10).associate { index ->
-            val item = Item(id = index, data = "Item $index")
-            item to ItemComponentPreview(item)
-        }
-    }
-}
+val listComponentPreview = ListComponent(
+    componentContext = componentContextPreview,
+    itemComponentFactory = ItemComponent.Factory(),
+    onGoBack = {}
+) 
+
+//{
+//    override val items: LazyChildItems<Item, ItemComponent> = LazyChildItemsPreview(generatePreviewItems())
+//    override fun goBack() {}
+//    fun generatePreviewItems(): Map<Item, ItemComponent> {
+//        return (1..10).associate { index ->
+//            val item = Item(id = index, data = "Item $index")
+//            item to ItemComponentPreview(item)
+//        }
+//    }
+//}

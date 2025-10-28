@@ -1,4 +1,4 @@
-package com.starfruit.yeldar
+package com.starfruit.template
 
 import com.arkivanov.decompose.ComponentContext
 

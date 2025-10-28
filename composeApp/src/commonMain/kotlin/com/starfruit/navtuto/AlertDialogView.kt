@@ -6,6 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import com.starfruit.navtuto.AlertDialogComponent.Factory
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.CannabisSolid
 import org.jetbrains.compose.ui.tooling.preview.Preview
@@ -52,8 +53,9 @@ private fun AlertDialogPreview() {
     }
 }
 
-val alertDialogComponentPreview = object: AlertDialogComponent {
-    override val text = "something to preview"
-    override fun dismiss() {}
-    override fun confirm() {}
-}
+val alertDialogComponentPreview = Factory()(
+    componentContext = componentContextPreview,
+    text = "haha",
+    onDismissed = {},
+    onConfirmed = {}
+)

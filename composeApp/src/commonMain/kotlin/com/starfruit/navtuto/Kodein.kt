@@ -30,21 +30,21 @@ private val commonModule = DI.Module("common") {
     //local sqlite database
     bindSingleton<PlayerDb> { PlayerDb(instance()) }
 
-    bindSingleton<AlertDialogComponent.Factory> { DefaultAlertDialogComponent.Factory() }
-    bindSingleton<DetailsComponent.Factory> { DefaultDetailsComponent.Factory() }
-    bindSingleton<ItemComponent.Factory> { DefaultItemComponent.Factory() }
-    bindSingleton<ListComponent.Factory> { DefaultListComponent.Factory(instance()) }
-    bindSingleton<MainComponent.Factory> { DefaultMainComponent.Factory() }
-    bindSingleton<PageComponent.Factory> { DefaultPageComponent.Factory() }
-    bindSingleton<PagesComponent.Factory> { DefaultPagesComponent.Factory(instance()) }
-    bindSingleton<PanelsComponent.Factory> {
-        DefaultPanelsComponent.Factory(
+    bindSingleton { AlertDialogComponent.Factory() }
+    bindSingleton { DetailsComponent.Factory() }
+    bindSingleton { ItemComponent.Factory() }
+    bindSingleton { ListComponent.Factory(instance()) }
+    bindSingleton { MainComponent.Factory() }
+    bindSingleton { PageComponent.Factory() }
+    bindSingleton { PagesComponent.Factory(instance()) }
+    bindSingleton {
+        PanelsComponent.Factory(
             instance(),
             instance()
         )
     }
-    bindSingleton<RootComponent.Factory> {
-        DefaultRootComponent.Factory(
+    bindSingleton {
+        RootComponent.Factory(
             instance(),
             instance(),
             instance(),
@@ -52,9 +52,9 @@ private val commonModule = DI.Module("common") {
             instance()
         )
     }
-    bindSingleton<ScreenAComponent.Factory> { DefaultScreenAComponent.Factory(instance()) }
-    bindSingleton<ScreenBComponent.Factory> { DefaultScreenBComponent.Factory(instance(), instance("IO")) }
-    bindSingleton<WaiterModalComponent.Factory> { DefaultWaiterModalComponent.Factory() }
+    bindSingleton { ScreenAComponent.Factory(instance()) }
+    bindSingleton { ScreenBComponent.Factory(instance(), instance("IO")) }
+    bindSingleton { WaiterModalComponent.Factory() }
 
 }
 

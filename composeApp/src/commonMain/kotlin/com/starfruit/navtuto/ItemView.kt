@@ -17,8 +17,11 @@ fun ItemView(component: ItemComponent) {
 @Preview(showBackground = true)
 private fun ItemPreview() {
     MaterialTheme {
-        ItemView(ItemComponentPreview(Item(1, "Earth")))
+        ItemView(itemComponentPreview)
     }
 }
 
-data class ItemComponentPreview(override val item: Item): ItemComponent {}
+val itemComponentPreview = ItemComponent(
+    componentContext = componentContextPreview,
+    item = Item(1, "huh")
+)

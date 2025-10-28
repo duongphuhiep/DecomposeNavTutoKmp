@@ -1,24 +1,20 @@
-package com.starfruit.navtuto
+package com.starfruit.template
 
 import com.arkivanov.decompose.ComponentContext
 
-class DetailsComponent(
+class MyNormalComponent(
     componentContext: ComponentContext,
-    val itemId: Int,
     private val onGoBack: () -> Unit,
 ) : ComponentContext by componentContext {
-    fun goBack() {
-        onGoBack()
-    }
 
-    class Factory() {
+    fun goBack() = onGoBack()
+
+    class Factory {
         operator fun invoke(
             componentContext: ComponentContext,
-            itemId: Int,
             onGoBack: () -> Unit,
-        ): DetailsComponent = DetailsComponent(
+        ) = MyNormalComponent(
             componentContext = componentContext,
-            itemId = itemId,
             onGoBack = onGoBack,
         )
     }

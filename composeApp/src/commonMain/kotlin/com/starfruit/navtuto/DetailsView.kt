@@ -30,7 +30,8 @@ private fun DetailsPreview() {
     }
 }
 
-val detailsComponentPreview = object : DetailsComponent{
-    override val itemId: Int get() = 10
-    override fun goBack() {}
-}
+val detailsComponentPreview = DetailsComponent(
+    componentContext = componentContextPreview,
+    itemId = 1234,
+    onGoBack = { }
+)

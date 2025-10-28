@@ -1,19 +1,16 @@
-package com.starfruit.navtuto
+package com.starfruit.template
 
 import com.arkivanov.decompose.ComponentContext
-import kotlinx.serialization.Serializable
-@Serializable // kotlinx-serialization plugin must be applied
-data class Item(val id: Int, val data: String)
 
-class ItemComponent(
+class MyItemComponent(
     componentContext: ComponentContext,
-    val item: Item,
+    private val item: String,
 ) : ComponentContext by componentContext {
     class Factory() {
         operator fun invoke(
             componentContext: ComponentContext,
-            item: Item
-        ): ItemComponent = ItemComponent(
+            item: String
+        ) = MyItemComponent(
             componentContext = componentContext,
             item = item
         )

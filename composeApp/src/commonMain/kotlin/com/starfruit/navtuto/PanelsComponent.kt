@@ -10,31 +10,17 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
 
-
-interface PanelsComponent {
-    val panels: Value<ChildPanels<*, MainComponent, *, DetailsComponent, Nothing, Nothing>>
-
-    fun setMode(mode: ChildPanelsMode)
-
-    fun interface Factory {
-        operator fun invoke(
-            componentContext: ComponentContext,
-            onGoBack: () -> Unit,
-        ): PanelsComponent
-    }
-}
-
-class DefaultPanelsComponent private constructor(
+class PanelsComponent(
     componentContext: ComponentContext,
     private val mainComponentFactory: MainComponent.Factory,
     private val detailsComponentFactory: DetailsComponent.Factory,
     val onGoBack: () -> Unit,
-) : PanelsComponent, ComponentContext by componentContext {
+) : ComponentContext by componentContext {
 
     private val nav = PanelsNavigation<Unit, DetailsConfig, Nothing>()
 
     @OptIn(ExperimentalSerializationApi::class)
-    override val panels: Value<ChildPanels<*, MainComponent, *, DetailsComponent, Nothing, Nothing>> =
+    val panels: Value<ChildPanels<*, MainComponent, *, DetailsComponent, Nothing, Nothing>> =
         childPanels(
             source = nav,
             serializers = Unit.serializer() to DetailsConfig.serializer(),
@@ -56,7 +42,7 @@ class DefaultPanelsComponent private constructor(
             },
         )
 
-    override fun setMode(mode: ChildPanelsMode) = nav.setMode(mode)
+    fun setMode(mode: ChildPanelsMode) = nav.setMode(mode)
 
     @Serializable
     private data class DetailsConfig(val itemId: Int)
@@ -64,11 +50,11 @@ class DefaultPanelsComponent private constructor(
     class Factory(
         private val mainComponentFactory: MainComponent.Factory,
         private val detailsComponentFactory: DetailsComponent.Factory,
-    ) : PanelsComponent.Factory {
-        override fun invoke(
+    ) {
+        operator fun invoke(
             componentContext: ComponentContext,
             onGoBack: () -> Unit,
-        ): PanelsComponent = DefaultPanelsComponent(
+        ): PanelsComponent = PanelsComponent(
             componentContext = componentContext,
             mainComponentFactory = mainComponentFactory,
             detailsComponentFactory = detailsComponentFactory,

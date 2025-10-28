@@ -3,39 +3,18 @@ package com.starfruit.navtuto
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.*
 import com.arkivanov.decompose.value.Value
-import com.starfruit.navtuto.RootComponent.Child
 import kotlinx.serialization.Serializable
 
-
-interface RootComponent {
-    val childStack: Value<ChildStack<*, Child>>
-
-    sealed interface Child {
-        data class ScreenA(val component: ScreenAComponent) : Child
-        data class ScreenB(val component: ScreenBComponent) : Child
-        data class Pages(val component: PagesComponent) : Child
-        data class Panels(val component: PanelsComponent) : Child
-        data class List(val component: ListComponent) : Child
-    }
-
-    fun interface Factory {
-        operator fun invoke(
-            componentContext: ComponentContext,
-        ): RootComponent
-    }
-}
-
-class DefaultRootComponent private constructor(
+class RootComponent(
     componentContext: ComponentContext,
     private val screenAComponentFactory: ScreenAComponent.Factory,
     private val screenBComponentFactory: ScreenBComponent.Factory,
     private val pagesComponentFactory: PagesComponent.Factory,
     private val panelsComponentFactory: PanelsComponent.Factory,
     private val listComponentFactory: ListComponent.Factory,
-) : RootComponent,
-    ComponentContext by componentContext {
+) : ComponentContext by componentContext {
     private val navigation = StackNavigation<Configuration>()
-    override val childStack: Value<ChildStack<*, Child>> = childStack(
+    val childStack: Value<ChildStack<*, Child>> = childStack(
         source = navigation,
         serializer = Configuration.serializer(),
         initialConfiguration = Configuration.ScreenA,
@@ -88,6 +67,14 @@ class DefaultRootComponent private constructor(
         }
     }
 
+    sealed interface Child {
+        data class ScreenA(val component: ScreenAComponent) : Child
+        data class ScreenB(val component: ScreenBComponent) : Child
+        data class Pages(val component: PagesComponent) : Child
+        data class Panels(val component: PanelsComponent) : Child
+        data class List(val component: ListComponent) : Child
+    }
+
     @Serializable
     private sealed interface Configuration {
         @Serializable
@@ -108,10 +95,10 @@ class DefaultRootComponent private constructor(
         private val pagesComponentFactory: PagesComponent.Factory,
         private val panelsComponentFactory: PanelsComponent.Factory,
         private val listComponentFactory: ListComponent.Factory,
-    ): RootComponent.Factory {
-        override fun invoke(
+    ) {
+        operator fun invoke(
             componentContext: ComponentContext,
-        ): RootComponent = DefaultRootComponent(
+        ): RootComponent = RootComponent(
             componentContext = componentContext,
             screenAComponentFactory = screenAComponentFactory,
             screenBComponentFactory = screenBComponentFactory,

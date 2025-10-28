@@ -6,56 +6,30 @@ import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import com.starfruit.util.Optional
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.coroutineContext
 import kotlin.time.Duration.Companion.seconds
 
-suspend fun  loadData(): String {
+suspend fun loadData(): String {
     delay(5000)
     return "I'm the Loading's result"
 }
 
-interface ScreenBComponent {
-    val text: String
-
-    val someData: Value<Optional<String>>
-    val loadingState: Value<String>
-    fun loadSomeData(scope: CoroutineScope)
-
-    fun showProgression()
-
-    fun goBack()
-
-    fun interface Factory {
-        operator fun invoke(
-            componentContext: ComponentContext,
-            text: String,
-            onGoBack: () -> Unit,
-        ): ScreenBComponent
-    }
-
-    val waiterModalComponent: WaiterModalComponent
-}
-
-class DefaultScreenBComponent private constructor(
+class ScreenBComponent(
     componentContext: ComponentContext,
-    override val text: String,
+    val text: String,
     private val onGoBack: () -> Unit,
     waiterModalComponentFactory: WaiterModalComponent.Factory,
     private val globalCoroutineContext: CoroutineContext
-) : ScreenBComponent, ComponentContext by componentContext {
+) : ComponentContext by componentContext {
     private val _loadingState = MutableValue("not started")
-    override val loadingState: Value<String> = _loadingState
+    val loadingState: Value<String> = _loadingState
     private val _someData = MutableValue<Optional<String>>(Optional(null))
-    override val someData: Value<Optional<String>> = _someData
+    val someData: Value<Optional<String>> = _someData
 
-    override fun loadSomeData(scope: CoroutineScope) {
+    fun loadSomeData(scope: CoroutineScope) {
         _loadingState.value = "loading..."
         scope.launch {
             _someData.value = Optional(loadData())
@@ -65,11 +39,15 @@ class DefaultScreenBComponent private constructor(
     }
 
     val progression = MutableValue("")
-    override val waiterModalComponent = waiterModalComponentFactory(childContext(key = "waiter", lifecycle = LifecycleRegistry()), progression)
-    //this scope live as long as the Component
-    private val componentScope = CoroutineScope(globalCoroutineContext + SupervisorJob())
+    val waiterModalComponent = waiterModalComponentFactory(
+        childContext(key = "waiter", lifecycle = LifecycleRegistry()),
+        progression
+    )
 
-    override fun showProgression() {
+    //this scope live as long as the Component
+    private val componentScope = coroutineScope(globalCoroutineContext + SupervisorJob())
+
+    fun showProgression() {
         componentScope.launch {
             progression.value = "initialize"
             delay(1.seconds)
@@ -83,15 +61,17 @@ class DefaultScreenBComponent private constructor(
         }
     }
 
-    override fun goBack() = onGoBack()
+    fun goBack() = onGoBack()
 
-    class Factory(private val waiterModalComponentFactory: WaiterModalComponent.Factory,
-                  private val globalCoroutineContext: CoroutineContext): ScreenBComponent.Factory {
-        override fun invoke(
+    class Factory(
+        private val waiterModalComponentFactory: WaiterModalComponent.Factory,
+        private val globalCoroutineContext: CoroutineContext
+    ) {
+        operator fun invoke(
             componentContext: ComponentContext,
             text: String,
             onGoBack: () -> Unit
-        ): ScreenBComponent = DefaultScreenBComponent(
+        ): ScreenBComponent = ScreenBComponent(
             componentContext = componentContext,
             text = text,
             onGoBack = onGoBack,

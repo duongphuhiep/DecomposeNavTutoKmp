@@ -9,44 +9,14 @@ import com.arkivanov.decompose.value.operator.map
 import com.starfruit.util.Optional
 import kotlinx.serialization.Serializable
 
-
-interface ScreenAComponent {
-    val alertDialog: Value<Optional<AlertDialogComponent>>
-    val text: Value<String>
-
-    /**
-     * null if the dialog is not show up
-     * true if the dialog is confirmed
-     * false if the dialog is dismissed
-     */
-    val dialogIsConfirmed: Value<Optional<Boolean>>
-    fun goToScreenB()
-    fun updateText(text: String)
-    fun openAlertDialog()
-    fun resetDialogResult()
-    fun goToPages()
-    fun goToPanels()
-    fun goToList()
-
-    fun interface Factory {
-        operator fun invoke(
-            componentContext: ComponentContext,
-            onGoToScreenB: (text: String) -> Unit,
-            onGoToPages: () -> Unit,
-            onGoToPanels: () -> Unit,
-            onGoToList: () -> Unit
-        ): ScreenAComponent
-    }
-}
-
-class DefaultScreenAComponent private constructor(
+class ScreenAComponent(
     componentContext: ComponentContext,
     private val alertDialogComponentFactory: AlertDialogComponent.Factory,
     private val onGoToScreenB: (text: String) -> Unit,
     private val onGoToPages: () -> Unit,
     private val onGoToPanels: () -> Unit,
     private val onGoToList: () -> Unit
-) : ScreenAComponent, ComponentContext by componentContext {
+) : ComponentContext by componentContext {
     private val dialogNavigation = SlotNavigation<AlertDialogConfig>()
     val alertDialogChildSlot: Value<ChildSlot<*, AlertDialogComponent>> =
         childSlot(
@@ -61,40 +31,40 @@ class DefaultScreenAComponent private constructor(
                 onConfirmed = ::dialogConfirmed
             )
         }
-    override val alertDialog =
+    val alertDialog =
         alertDialogChildSlot.map { Optional(it.child?.instance) }
 
     private val _dialogIsConfirmed = MutableValue(Optional<Boolean>(null))
-    override val dialogIsConfirmed: Value<Optional<Boolean>> = _dialogIsConfirmed
+    val dialogIsConfirmed: Value<Optional<Boolean>> = _dialogIsConfirmed
 
     private val _text = MutableValue("")
-    override val text: Value<String> = _text
+    val text: Value<String> = _text
 
-    override fun goToScreenB() {
+    fun goToScreenB() {
         onGoToScreenB(text.value)
     }
 
-    override fun updateText(text: String) {
+    fun updateText(text: String) {
         _text.value = text
     }
 
-    override fun openAlertDialog() {
+    fun openAlertDialog() {
         dialogNavigation.activate(AlertDialogConfig(text.value))
     }
 
-    override fun resetDialogResult() {
+    fun resetDialogResult() {
         _dialogIsConfirmed.value = Optional(null)
     }
 
-    override fun goToPages() {
+    fun goToPages() {
         onGoToPages()
     }
 
-    override fun goToPanels() {
+    fun goToPanels() {
         onGoToPanels()
     }
 
-    override fun goToList() {
+    fun goToList() {
         onGoToList()
     }
 
@@ -117,14 +87,14 @@ class DefaultScreenAComponent private constructor(
 
     class Factory(
         private val alertDialogComponentFactory: AlertDialogComponent.Factory,
-    ) : ScreenAComponent.Factory {
-        override fun invoke(
+    ) {
+        operator fun invoke(
             componentContext: ComponentContext,
             onGoToScreenB: (text: String) -> Unit,
             onGoToPages: () -> Unit,
             onGoToPanels: () -> Unit,
             onGoToList: () -> Unit
-        ): ScreenAComponent = DefaultScreenAComponent(
+        ): ScreenAComponent = ScreenAComponent(
             componentContext = componentContext,
             alertDialogComponentFactory = alertDialogComponentFactory,
             onGoToScreenB = onGoToScreenB,

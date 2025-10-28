@@ -4,9 +4,12 @@ import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.router.stack.active
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import kotlinx.coroutines.Dispatchers
 import org.kodein.di.DI
+import org.kodein.di.bindSingleton
 import org.kodein.di.conf.ConfigurableDI
 import org.kodein.di.instance
+import kotlin.coroutines.CoroutineContext
 import kotlin.test.BeforeTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,7 +18,9 @@ import kotlin.test.assertNotEquals
 
 class AppTest {
     val di = ConfigurableDI().initAppDependencies(
-        DI.Module("contextAndMock") {}
+        DI.Module("contextAndMock", allowSilentOverride = true) {
+            bindSingleton<CoroutineContext>("IO") { Dispatchers.Default }
+        }
     )
     val rootLifecycle = LifecycleRegistry()
     lateinit var rootComponent: RootComponent;
@@ -61,7 +66,7 @@ class AppTest {
         //the current active screen is screenA
         val screenA = rootComponent.childStack.active.instance
         assertIs<RootComponent.Child.ScreenA>(screenA)
-        assertIs<DefaultScreenAComponent>(screenA.component)
+        assertIs<ScreenAComponent>(screenA.component)
         println("screenA=${screenA.component.lifecycle.state}")
 
         //type "1234" on ScreenA
@@ -72,7 +77,7 @@ class AppTest {
         //Now the current active screen is screenB
         val screenB = rootComponent.childStack.active.instance
         assertIs<RootComponent.Child.ScreenB>(screenB)
-        assertIs<DefaultScreenBComponent>(screenB.component)
+        assertIs<ScreenBComponent>(screenB.component)
         println("screenA=${screenA.component.lifecycle.state}, screenB=${screenB.component.lifecycle.state}")
 
         // the "1234" is displayed on the screenB
@@ -95,7 +100,7 @@ class AppTest {
 
         val screenB1 = rootComponent.childStack.active.instance
         assertIs<RootComponent.Child.ScreenB>(screenB1)
-        assertIs<DefaultScreenBComponent>(screenB1.component)
+        assertIs<ScreenBComponent>(screenB1.component)
         assertEquals("1234", screenB1.component.text)
 
         // it is not the same screenB as the first one (the first one is destroyed)

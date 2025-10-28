@@ -18,7 +18,7 @@ private fun PagePreview() {
     }
 }
 
-val pageComponentPreview = object: PageComponent {
-    override val data: String
-        get() = "This is a preview page"
-}
+val pageComponentPreview = PageComponent(
+    componentContext = componentContextPreview,
+    data = "this is a preview page"
+)

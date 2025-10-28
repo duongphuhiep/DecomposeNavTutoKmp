@@ -8,6 +8,7 @@ import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.starfruit.util.Optional
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -49,21 +50,10 @@ private fun ScreenBPreview() {
     }
 }
 
-val screenBComponentPreview = object : ScreenBComponent {
-    override val text = "preview content"
-    override val someData: Value<Optional<String>> = MutableValue(Optional("some result"))
-    override val loadingState: Value<String> = MutableValue("loaded")
-
-    override fun loadSomeData(scope: CoroutineScope) {
-        TODO("Not yet implemented")
-    }
-
-    override fun showProgression() {
-        TODO("Not yet implemented")
-    }
-
-    override fun goBack() {}
-
-    override val waiterModalComponent: WaiterModalComponent
-        get() = waiterModalComponentPreview
-}
+val screenBComponentPreview = ScreenBComponent(
+    componentContext = componentContextPreview,
+    text = "ha",
+    onGoBack = {},
+    waiterModalComponentFactory = WaiterModalComponent.Factory(),
+    globalCoroutineContext = Dispatchers.Default
+)

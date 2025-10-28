@@ -2,7 +2,7 @@
 Decompose + Kodein integration
 https://medium.com/@yeldar.nurpeissov/master-kotlin-multiplatform-navigation-with-decompose-add-di-with-kodein-and-koin-405462b2691b
 */
-package com.starfruit.yeldar
+package com.starfruit.template
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack

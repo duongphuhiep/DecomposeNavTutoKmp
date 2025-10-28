@@ -58,13 +58,14 @@ fun RootView(component: RootComponent) {
     }
 }
 
+val componentContextPreview = DefaultComponentContext(LifecycleRegistry())
+
 val rootComponentPreview: RootComponent get() {
     val di = ConfigurableDI().initAppDependencies(
         DI.Module("preview") {}
     )
     val rootComponentFactory by di.instance<RootComponent.Factory>()
-    val rootLifecycle = LifecycleRegistry()
-    return rootComponentFactory(DefaultComponentContext(rootLifecycle))
+    return rootComponentFactory(componentContextPreview)
 }
 
 @Composable

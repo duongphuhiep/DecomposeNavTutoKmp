@@ -38,6 +38,7 @@ private fun WaiterModalPreview() {
     }
 }
 
-val waiterModalComponentPreview = object: WaiterModalComponent {
-    override val text = MutableValue("something to preview")
-}
+val waiterModalComponentPreview = WaiterModalComponent(
+    componentContext = componentContextPreview,
+    text = MutableValue("haha")
+)

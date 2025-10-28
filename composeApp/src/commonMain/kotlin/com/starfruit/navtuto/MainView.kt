@@ -33,7 +33,8 @@ private fun MainPreview() {
     }
 }
 
-val mainComponentPreview = object : MainComponent{
-    override fun selectItem(itemId: Int) {}
-    override fun goBack() {}
-}
+val mainComponentPreview = MainComponent(
+    componentContext = componentContextPreview,
+    onSelectItem = {},
+    onGoBack = {}
+)

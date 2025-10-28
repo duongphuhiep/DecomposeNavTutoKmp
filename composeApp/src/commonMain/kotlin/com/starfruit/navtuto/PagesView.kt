@@ -75,14 +75,20 @@ private fun PagesPreview() {
     }
 }
 
-val pagesComponentPreview = object : PagesComponent {
-    override val pages: Value<ChildPages<*, PageComponent>>
-        get() = MutableValue(ChildPages(
-            items = listOf(
-                Child.Created(0, pageComponentPreview),
-                Child.Created(1, pageComponentPreview),
-            ),
-            selectedIndex = 1
-        ))
-    override fun selectPage(index: Int) {}
-}
+val pagesComponentPreview = PagesComponent(
+    componentContext = componentContextPreview,
+    pageComponentFactory = PageComponent.Factory()
+)
+
+
+//val pagesComponentPreview = object : PagesComponent {
+//    override val pages: Value<ChildPages<*, PageComponent>>
+//        get() = MutableValue(ChildPages(
+//            items = listOf(
+//                Child.Created(0, pageComponentPreview),
+//                Child.Created(1, pageComponentPreview),
+//            ),
+//            selectedIndex = 1
+//        ))
+//    override fun selectPage(index: Int) {}
+//}
