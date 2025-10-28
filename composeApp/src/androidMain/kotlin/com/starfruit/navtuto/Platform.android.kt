@@ -15,7 +15,7 @@ class AndroidPlatform : Platform {
 
 actual fun getPlatform(): Platform = AndroidPlatform()
 actual val platformModule: DI.Module = DI.Module("android") {
-    bindSingleton<CoroutineContext> { Dispatchers.IO }
+    bindSingleton<CoroutineContext>("IO") { Dispatchers.IO }
     bindSingleton<SqlDriver> {
         AndroidSqliteDriver(
             schema = PlayerDb.Schema.synchronous(),

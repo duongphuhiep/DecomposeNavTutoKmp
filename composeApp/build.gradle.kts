@@ -65,6 +65,7 @@ kotlin {
             implementation(libs.material3.adaptive)
             implementation(libs.kermit)
             implementation(libs.composeIcons.lineAwesome)
+            implementation(libs.essenty.lifecycleCoroutines)
             implementation(libs.decompose)
             implementation(libs.decompose.compose)
             implementation(libs.decompose.compose.experimental)

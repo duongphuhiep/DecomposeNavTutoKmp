@@ -4,10 +4,26 @@ import com.starfruit.util.suspendLazy
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class SuspendLazyTest {
+    @Test
+    fun `synchornous lazy test`() {
+        var count = 0
+        val expensive = lazy<Int?> {
+            count++
+            error("hi")
+        }
+
+        assertFails { expensive.value }
+        assertEquals(1, count)
+        assertFalse { expensive.isInitialized() }
+        assertFails { expensive.value }
+        assertEquals(2, count)
+    }
+
     @Test
     fun `Basic usage with invoke operator`() = runTest {
         val expensive = suspendLazy {

@@ -3,6 +3,7 @@ package com.starfruit.navtuto
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
@@ -16,8 +17,9 @@ class CoroutineScopeCreation {
         private val ioContext: CoroutineContext,
     ) : ComponentContext by componentContext {
 
+
         // The scope is automatically cancelled when the component is destroyed
-        private val scope = CoroutineScope(mainContext + SupervisorJob())
+        private val scope = coroutineScope(mainContext + SupervisorJob())
 
         fun foo() {
             scope.launch {

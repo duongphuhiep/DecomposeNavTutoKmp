@@ -53,6 +53,8 @@ private val commonModule = DI.Module("common") {
         )
     }
     bindSingleton<ScreenAComponent.Factory> { DefaultScreenAComponent.Factory(instance()) }
-    bindSingleton<ScreenBComponent.Factory> { DefaultScreenBComponent.Factory() }
+    bindSingleton<ScreenBComponent.Factory> { DefaultScreenBComponent.Factory(instance(), instance("IO")) }
+    bindSingleton<WaiterModalComponent.Factory> { DefaultWaiterModalComponent.Factory() }
+
 }
 

@@ -1,12 +1,8 @@
 package com.starfruit.navtuto
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
@@ -31,9 +27,17 @@ fun ScreenBView(component: ScreenBComponent) {
             Text(it)
         }
 
+        Button({ component.showProgression() }) {
+            Text("Show Progression")
+        }
+
         Button({ component.goBack() }) {
             Text("Go back")
         }
+    }
+    val waiterState = component.waiterModalComponent.text.subscribeAsState()
+    if (waiterState.value.isNotEmpty()) {
+        WaiterModalView(component.waiterModalComponent)
     }
 }
 
@@ -54,5 +58,12 @@ val screenBComponentPreview = object : ScreenBComponent {
         TODO("Not yet implemented")
     }
 
+    override fun showProgression() {
+        TODO("Not yet implemented")
+    }
+
     override fun goBack() {}
+
+    override val waiterModalComponent: WaiterModalComponent
+        get() = waiterModalComponentPreview
 }
