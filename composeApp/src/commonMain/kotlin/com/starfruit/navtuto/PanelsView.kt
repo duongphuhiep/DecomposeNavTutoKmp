@@ -22,7 +22,7 @@ import com.starfruit.util.decompose.ChildPanelsModeChangedEffect
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun PanelsView(component: PanelsComponent) {
+fun PanelsView(component: IPanelsComponent) {
     ChildPanelsModeChangedEffect(component::setMode)
     Box(
         modifier=Modifier.fillMaxSize(),
@@ -53,22 +53,21 @@ private fun PanelsPreview() {
     }
 }
 
-val panelsComponentPreview1 = PanelsComponent(
-    componentContext = componentContextPreview,
-    mainComponentFactory = MainComponent.Factory(),
-    detailsComponentFactory = DetailsComponent.Factory(),
-    onGoBack = {}
-)
+//val panelsComponentPreview1 = PanelsComponent(
+//    componentContext = componentContextPreview,
+//    mainComponentFactory = MainComponent.Factory(),
+//    detailsComponentFactory = DetailsComponent.Factory(),
+//    onGoBack = {}
+//)
 
-//val panelsComponentPreview1 = object : PanelsComponent {
-//    override val panels: Value<ChildPanels<*, MainComponent, *, DetailsComponent, Nothing, Nothing>>
-//        get() = MutableValue(
-//            ChildPanels(
-//                main = Child.Created("", mainComponentPreview),
-//                details = Child.Created("", detailsComponentPreview),
-//                mode = ChildPanelsMode.DUAL
-//            )
-//        )
-//    override fun setMode(mode: ChildPanelsMode) {}
-//}
-//val panelsComponentPreview2 = DefaultPanelsComponent(rootComponentPreview)
+val panelsComponentPreview1 = object : IPanelsComponent {
+    override val panels: Value<ChildPanels<*, IMainComponent, *, IDetailsComponent, Nothing, Nothing>>
+        get() = MutableValue(
+            ChildPanels(
+                main = Child.Created("", mainComponentPreview),
+                details = Child.Created("", detailsComponentPreview),
+                mode = ChildPanelsMode.DUAL
+            )
+        )
+    override fun setMode(mode: ChildPanelsMode) {}
+}

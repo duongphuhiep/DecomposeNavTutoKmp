@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun MainView(component: MainComponent) {
+fun MainView(component: IMainComponent) {
     Column(modifier = Modifier.background(AppColors.BgMain)) {
         Text("Main")
         Button(onClick = { component.goBack() }) {
@@ -33,8 +33,7 @@ private fun MainPreview() {
     }
 }
 
-val mainComponentPreview = MainComponent(
-    componentContext = componentContextPreview,
-    onSelectItem = {},
-    onGoBack = {}
-)
+val mainComponentPreview = object : IMainComponent{
+    override fun selectItem(itemId: Int) {}
+    override fun goBack() {}
+}

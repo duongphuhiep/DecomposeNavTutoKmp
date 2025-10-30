@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun PageView(component: PageComponent) {
+fun PageView(component: IPageComponent) {
     Text("Page: ${component.data}")
 }
 
@@ -18,7 +18,6 @@ private fun PagePreview() {
     }
 }
 
-val pageComponentPreview = PageComponent(
-    componentContext = componentContextPreview,
-    data = "this is a preview page"
-)
+val pageComponentPreview = object : IPageComponent {
+    override val data = "This is a preview page"
+}

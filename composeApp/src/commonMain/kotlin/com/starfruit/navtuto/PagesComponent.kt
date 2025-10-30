@@ -5,14 +5,28 @@ import com.arkivanov.decompose.router.pages.*
 import com.arkivanov.decompose.value.Value
 import kotlinx.serialization.Serializable
 
+interface IPagesComponent {
+    val pages: Value<ChildPages<*, IPageComponent>>
+    fun selectPage(index: Int)
+}
 class PagesComponent(
     componentContext: ComponentContext,
     private val pageComponentFactory: PageComponent.Factory
-) : ComponentContext by componentContext {
+) : ComponentContext by componentContext, IPagesComponent {
+    class Factory(
+        private val pageComponentFactory: PageComponent.Factory
+    ) {
+        operator fun invoke(
+            componentContext: ComponentContext,
+        ): PagesComponent = PagesComponent(
+            componentContext = componentContext,
+            pageComponentFactory = pageComponentFactory,
+        )
+    }
 
     private val navigation = PagesNavigation<Config>()
 
-    val pages: Value<ChildPages<*, PageComponent>> =
+    override val pages: Value<ChildPages<*, IPageComponent>> =
         childPages(
             source = navigation,
             serializer = Config.serializer(), // Or null to disable navigation state saving
@@ -29,21 +43,10 @@ class PagesComponent(
             )
         }
 
-    fun selectPage(index: Int) {
+    override fun selectPage(index: Int) {
         navigation.select(index = index)
     }
 
     @Serializable // kotlinx-serialization plugin must be applied
     private data class Config(val data: String)
-
-    class Factory(
-        private val pageComponentFactory: PageComponent.Factory
-    ) {
-        operator fun invoke(
-            componentContext: ComponentContext,
-        ): PagesComponent = PagesComponent(
-            componentContext = componentContext,
-            pageComponentFactory = pageComponentFactory,
-        )
-    }
 }

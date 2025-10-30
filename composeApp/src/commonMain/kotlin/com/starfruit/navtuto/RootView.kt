@@ -1,10 +1,7 @@
 package com.starfruit.navtuto
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.DefaultComponentContext
@@ -16,7 +13,6 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.kodein.di.DI
 import org.kodein.di.conf.ConfigurableDI
-import org.kodein.di.conf.global
 import org.kodein.di.instance
 
 // Create a CompositionLocal
@@ -25,7 +21,7 @@ val LocalSnackbarHostState = compositionLocalOf<SnackbarHostState> {
 }
 
 @Composable
-fun RootView(component: RootComponent) {
+fun RootView(component: IRootComponent) {
     MaterialTheme {
         val snackbarHostState = remember { SnackbarHostState() }
         CompositionLocalProvider(LocalSnackbarHostState provides snackbarHostState)
@@ -35,9 +31,11 @@ fun RootView(component: RootComponent) {
                     SnackbarHost(hostState = snackbarHostState)
                 }
             ) { contentPadding ->
-                Column(Modifier
-                    .padding(contentPadding)
-                    .fillMaxSize()) {
+                Column(
+                    Modifier
+                        .padding(contentPadding)
+                        .fillMaxSize()
+                ) {
                     val childStack by component.childStack.subscribeAsState()
                     Children(
                         stack = childStack,
@@ -45,11 +43,11 @@ fun RootView(component: RootComponent) {
                         animation = stackAnimation(slide()),
                     ) {
                         when (val instance = it.instance) {
-                            is RootComponent.Child.ScreenA -> ScreenAView(instance.component)
-                            is RootComponent.Child.ScreenB -> ScreenBView(instance.component)
-                            is RootComponent.Child.Pages -> PagesView(instance.component)
-                            is RootComponent.Child.Panels -> PanelsView(instance.component)
-                            is RootComponent.Child.List -> ListView(instance.component)
+                            is IRootComponent.Child.ScreenA -> ScreenAView(instance.component)
+                            is IRootComponent.Child.ScreenB -> ScreenBView(instance.component)
+                            is IRootComponent.Child.Pages -> PagesView(instance.component)
+                            is IRootComponent.Child.Panels -> PanelsView(instance.component)
+                            is IRootComponent.Child.List -> ListView(instance.component)
                         }
                     }
                 }
@@ -60,13 +58,14 @@ fun RootView(component: RootComponent) {
 
 val componentContextPreview = DefaultComponentContext(LifecycleRegistry())
 
-val rootComponentPreview: RootComponent get() {
-    val di = ConfigurableDI().initAppDependencies(
-        DI.Module("preview") {}
-    )
-    val rootComponentFactory by di.instance<RootComponent.Factory>()
-    return rootComponentFactory(componentContextPreview)
-}
+val rootComponentPreview: RootComponent
+    get() {
+        val di = ConfigurableDI().initAppDependencies(
+            DI.Module("preview") {}
+        )
+        val rootComponentFactory by di.instance<RootComponent.Factory>()
+        return rootComponentFactory(componentContextPreview)
+    }
 
 @Composable
 @Preview(showBackground = true, widthDp = 480, heightDp = 800)

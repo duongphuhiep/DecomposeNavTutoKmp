@@ -1,18 +1,13 @@
 package com.starfruit.navtuto
 
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import com.starfruit.navtuto.AlertDialogComponent.Factory
 import compose.icons.LineAwesomeIcons
 import compose.icons.lineawesomeicons.CannabisSolid
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun AlertDialogView(component: AlertDialogComponent) {
+fun AlertDialogView(component: IAlertDialogComponent) {
     AlertDialog(
         icon = {
             Icon(
@@ -53,9 +48,8 @@ private fun AlertDialogPreview() {
     }
 }
 
-val alertDialogComponentPreview = Factory()(
-    componentContext = componentContextPreview,
-    text = "haha",
-    onDismissed = {},
-    onConfirmed = {}
-)
+val alertDialogComponentPreview = object: IAlertDialogComponent {
+    override val text = "something to preview"
+    override fun dismiss() {}
+    override fun confirm() {}
+}

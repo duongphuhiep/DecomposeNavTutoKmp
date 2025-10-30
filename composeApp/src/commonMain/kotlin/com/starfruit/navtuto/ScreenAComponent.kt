@@ -9,6 +9,23 @@ import com.arkivanov.decompose.value.operator.map
 import com.starfruit.util.Optional
 import kotlinx.serialization.Serializable
 
+interface IScreenAComponent {
+    val alertDialog: Value<Optional<AlertDialogComponent>>
+    val text: Value<String>
+
+    /**
+     * null if the dialog is not show up
+     * true if the dialog is confirmed
+     * false if the dialog is dismissed
+     */
+    val dialogIsConfirmed: Value<Optional<Boolean>>
+    fun goToScreenB()
+    fun updateText(text: String)
+    fun openAlertDialog()
+    fun resetDialogResult()
+    fun goToPages()
+    fun goToPanels()
+    fun goToList()}
 class ScreenAComponent(
     componentContext: ComponentContext,
     private val alertDialogComponentFactory: AlertDialogComponent.Factory,
@@ -16,7 +33,26 @@ class ScreenAComponent(
     private val onGoToPages: () -> Unit,
     private val onGoToPanels: () -> Unit,
     private val onGoToList: () -> Unit
-) : ComponentContext by componentContext {
+) : ComponentContext by componentContext, IScreenAComponent {
+    class Factory(
+        private val alertDialogComponentFactory: AlertDialogComponent.Factory,
+    ) {
+        operator fun invoke(
+            componentContext: ComponentContext,
+            onGoToScreenB: (text: String) -> Unit,
+            onGoToPages: () -> Unit,
+            onGoToPanels: () -> Unit,
+            onGoToList: () -> Unit
+        ): ScreenAComponent = ScreenAComponent(
+            componentContext = componentContext,
+            alertDialogComponentFactory = alertDialogComponentFactory,
+            onGoToScreenB = onGoToScreenB,
+            onGoToPages = onGoToPages,
+            onGoToPanels = onGoToPanels,
+            onGoToList = onGoToList
+        )
+    }
+
     private val dialogNavigation = SlotNavigation<AlertDialogConfig>()
     val alertDialogChildSlot: Value<ChildSlot<*, AlertDialogComponent>> =
         childSlot(
@@ -31,40 +67,40 @@ class ScreenAComponent(
                 onConfirmed = ::dialogConfirmed
             )
         }
-    val alertDialog =
+    override val alertDialog =
         alertDialogChildSlot.map { Optional(it.child?.instance) }
 
     private val _dialogIsConfirmed = MutableValue(Optional<Boolean>(null))
-    val dialogIsConfirmed: Value<Optional<Boolean>> = _dialogIsConfirmed
+    override val dialogIsConfirmed: Value<Optional<Boolean>> = _dialogIsConfirmed
 
     private val _text = MutableValue("")
-    val text: Value<String> = _text
+    override val text: Value<String> = _text
 
-    fun goToScreenB() {
+    override fun goToScreenB() {
         onGoToScreenB(text.value)
     }
 
-    fun updateText(text: String) {
+    override fun updateText(text: String) {
         _text.value = text
     }
 
-    fun openAlertDialog() {
+    override fun openAlertDialog() {
         dialogNavigation.activate(AlertDialogConfig(text.value))
     }
 
-    fun resetDialogResult() {
+    override fun resetDialogResult() {
         _dialogIsConfirmed.value = Optional(null)
     }
 
-    fun goToPages() {
+    override fun goToPages() {
         onGoToPages()
     }
 
-    fun goToPanels() {
+    override fun goToPanels() {
         onGoToPanels()
     }
 
-    fun goToList() {
+    override fun goToList() {
         onGoToList()
     }
 
@@ -84,23 +120,4 @@ class ScreenAComponent(
 
     @Serializable
     private data class AlertDialogConfig(val text: String)
-
-    class Factory(
-        private val alertDialogComponentFactory: AlertDialogComponent.Factory,
-    ) {
-        operator fun invoke(
-            componentContext: ComponentContext,
-            onGoToScreenB: (text: String) -> Unit,
-            onGoToPages: () -> Unit,
-            onGoToPanels: () -> Unit,
-            onGoToList: () -> Unit
-        ): ScreenAComponent = ScreenAComponent(
-            componentContext = componentContext,
-            alertDialogComponentFactory = alertDialogComponentFactory,
-            onGoToScreenB = onGoToScreenB,
-            onGoToPages = onGoToPages,
-            onGoToPanels = onGoToPanels,
-            onGoToList = onGoToList
-        )
-    }
 }

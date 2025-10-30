@@ -2,13 +2,13 @@ package com.starfruit.template
 
 import com.arkivanov.decompose.ComponentContext
 
+interface IMyNormalComponent {
+    fun goBack()
+}
 class MyNormalComponent(
     componentContext: ComponentContext,
     private val onGoBack: () -> Unit,
-) : ComponentContext by componentContext {
-
-    fun goBack() = onGoBack()
-
+) : ComponentContext by componentContext, IMyNormalComponent {
     class Factory {
         operator fun invoke(
             componentContext: ComponentContext,
@@ -18,4 +18,6 @@ class MyNormalComponent(
             onGoBack = onGoBack,
         )
     }
+
+    override fun goBack() = onGoBack()
 }

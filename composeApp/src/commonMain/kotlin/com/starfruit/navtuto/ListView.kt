@@ -4,24 +4,20 @@ package com.starfruit.navtuto
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.lazy.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.extensions.compose.lazyitems.ChildItemsLifecycleController
+import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.items.LazyChildItems
 import com.starfruit.util.decompose.LazyChildItemsPreview
 import org.jetbrains.compose.ui.tooling.preview.Preview
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import com.arkivanov.decompose.extensions.compose.lazyitems.ChildItemsLifecycleController
-import com.arkivanov.decompose.extensions.compose.subscribeAsState
 
 @Composable
-fun ListView(component: ListComponent) {
+fun ListView(component: IListComponent) {
     Column(modifier = Modifier.fillMaxSize()) {
         val childItems by component.items.subscribeAsState()
         val lazyListState = rememberLazyListState()
@@ -55,19 +51,19 @@ private fun ListPreview() {
     }
 }
 
-val listComponentPreview = ListComponent(
-    componentContext = componentContextPreview,
-    itemComponentFactory = ItemComponent.Factory(),
-    onGoBack = {}
-) 
+//val listComponentPreview = ListComponent(
+//    componentContext = componentContextPreview,
+//    itemComponentFactory = ItemComponent.Factory(),
+//    onGoBack = {}
+//)
 
-//{
-//    override val items: LazyChildItems<Item, ItemComponent> = LazyChildItemsPreview(generatePreviewItems())
-//    override fun goBack() {}
-//    fun generatePreviewItems(): Map<Item, ItemComponent> {
-//        return (1..10).associate { index ->
-//            val item = Item(id = index, data = "Item $index")
-//            item to ItemComponentPreview(item)
-//        }
-//    }
-//}
+val listComponentPreview = object: IListComponent {
+    override val items: LazyChildItems<Item, IItemComponent> = LazyChildItemsPreview(generatePreviewItems())
+    override fun goBack() {}
+    fun generatePreviewItems(): Map<Item, IItemComponent> {
+        return (1..10).associate { index ->
+            val item = Item(id = index, data = "Item $index")
+            item to itemComponentPreview
+        }
+    }
+}

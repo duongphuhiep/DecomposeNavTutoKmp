@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ItemView(component: ItemComponent) {
+fun ItemView(component: IItemComponent) {
     Row {
         Text(component.item.toString())
     }
@@ -21,7 +21,6 @@ private fun ItemPreview() {
     }
 }
 
-val itemComponentPreview = ItemComponent(
-    componentContext = componentContextPreview,
-    item = Item(1, "huh")
-)
+val itemComponentPreview = object: IItemComponent {
+    override val item = Item(1, "huh")
+}

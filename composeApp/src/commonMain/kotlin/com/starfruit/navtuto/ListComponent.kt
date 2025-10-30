@@ -6,14 +6,32 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.items.*
 
+interface IListComponent {
+    val items: LazyChildItems<Item, IItemComponent>
+    fun goBack()
+}
+
 class ListComponent(
     componentContext: ComponentContext,
     private val itemComponentFactory: ItemComponent.Factory,
     private val onGoBack: () -> Unit,
-) : ComponentContext by componentContext {
+) : ComponentContext by componentContext, IListComponent {
+    class Factory(
+        private val itemComponentFactory: ItemComponent.Factory,
+    ) {
+        operator fun invoke(
+            componentContext: ComponentContext,
+            onGoBack: () -> Unit,
+        ): ListComponent = ListComponent(
+            componentContext = componentContext,
+            itemComponentFactory = itemComponentFactory,
+            onGoBack = onGoBack,
+        )
+    }
+
     private val navigation = ItemsNavigation<Item>()
 
-     val items: LazyChildItems<Item, ItemComponent> =
+     override val items: LazyChildItems<Item, IItemComponent> =
         childItems(
             source = navigation,
 
@@ -51,18 +69,5 @@ class ListComponent(
         navigation.setItems { newItems }
     }
 
-     fun goBack() = onGoBack()
-
-    class Factory(
-        private val itemComponentFactory: ItemComponent.Factory,
-    ) {
-         operator fun invoke(
-            componentContext: ComponentContext,
-            onGoBack: () -> Unit,
-        ): ListComponent = ListComponent(
-            componentContext = componentContext,
-            itemComponentFactory = itemComponentFactory,
-            onGoBack = onGoBack,
-        )
-    }
+    override fun goBack() = onGoBack()
 }

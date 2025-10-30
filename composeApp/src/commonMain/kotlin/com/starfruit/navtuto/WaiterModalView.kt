@@ -10,7 +10,7 @@ import compose.icons.lineawesomeicons.CannabisSolid
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun WaiterModalView(component: WaiterModalComponent) {
+fun WaiterModalView(component: IWaiterModalComponent) {
     AlertDialog(
         icon = {
             Icon(
@@ -38,7 +38,6 @@ private fun WaiterModalPreview() {
     }
 }
 
-val waiterModalComponentPreview = WaiterModalComponent(
-    componentContext = componentContextPreview,
-    text = MutableValue("haha")
-)
+val waiterModalComponentPreview = object: IWaiterModalComponent {
+    override val text = MutableValue("haha")
+}

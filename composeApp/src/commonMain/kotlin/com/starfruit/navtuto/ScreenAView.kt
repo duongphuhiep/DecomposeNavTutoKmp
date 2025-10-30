@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ScreenAView(component: ScreenAComponent) {
+fun ScreenAView(component: IScreenAComponent) {
     Column {
         Text("Screen A")
 
@@ -66,26 +66,26 @@ private fun ScreenAPreview() {
     }
 }
 
-val screenAComponentPreview = ScreenAComponent(
-    componentContext = componentContextPreview,
-    alertDialogComponentFactory = AlertDialogComponent.Factory(),
-    onGoToScreenB = {},
-    onGoToPages = {},
-    onGoToPanels = {},
-    onGoToList = {}
-)
+//val screenAComponentPreview = ScreenAComponent(
+//    componentContext = componentContextPreview,
+//    alertDialogComponentFactory = AlertDialogComponent.Factory(),
+//    onGoToScreenB = {},
+//    onGoToPages = {},
+//    onGoToPanels = {},
+//    onGoToList = {}
+//)
 
-//val screenAComponentPreview = object : ScreenAComponent {
-//    override val alertDialog: Value<Optional<AlertDialogComponent>>
-//        get() = MutableValue(Optional(null))
-//    override val text: Value<String> = MutableValue("This is screen A")
-//    override val dialogIsConfirmed: Value<Optional<Boolean>> = MutableValue(Optional(null))
-//
-//    override fun goToScreenB() {}
-//    override fun updateText(text: String) {}
-//    override fun openAlertDialog() {}
-//    override fun resetDialogResult() {}
-//    override fun goToPages() {}
-//    override fun goToPanels() {}
-//    override fun goToList() {}
-//}
+val screenAComponentPreview = object : IScreenAComponent {
+    override val alertDialog: Value<Optional<AlertDialogComponent>>
+        get() = MutableValue(Optional(null))
+    override val text: Value<String> = MutableValue("This is screen A")
+    override val dialogIsConfirmed: Value<Optional<Boolean>> = MutableValue(Optional(null))
+
+    override fun goToScreenB() {}
+    override fun updateText(text: String) {}
+    override fun openAlertDialog() {}
+    override fun resetDialogResult() {}
+    override fun goToPages() {}
+    override fun goToPanels() {}
+    override fun goToList() {}
+}

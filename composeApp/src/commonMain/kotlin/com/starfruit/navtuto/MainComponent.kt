@@ -2,17 +2,16 @@ package com.starfruit.navtuto
 
 import com.arkivanov.decompose.ComponentContext
 
+interface IMainComponent {
+    fun selectItem(itemId: Int)
+    fun goBack()
+}
+
 class MainComponent(
     componentContext: ComponentContext,
     private val onSelectItem: (i: Int) -> Unit,
     private val onGoBack: () -> Unit
-) : ComponentContext by componentContext {
-    fun selectItem(itemId: Int) {
-        onSelectItem(itemId)
-    }
-
-    fun goBack() = onGoBack()
-
+) : ComponentContext by componentContext, IMainComponent {
     class Factory() {
         operator fun invoke(
             componentContext: ComponentContext,
@@ -24,4 +23,10 @@ class MainComponent(
             onGoBack = onGoBack,
         )
     }
+
+    override fun selectItem(itemId: Int) {
+        onSelectItem(itemId)
+    }
+
+    override fun goBack() = onGoBack()
 }
